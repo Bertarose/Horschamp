@@ -3,23 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>hors champ — machine sonore conceptuelle</title>
+<title>hors champ — machine sonore en développement</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
 :root {
-    --bg-deep: #050505;
-    --bg-mid: #0d0d0d;
-    --fg-primary: #f0f0f0;
-    --fg-dim: #6a6a6a;
-    --accent-hot: #00ff88;
-    --accent-pulse: #ff0055;
-    --accent-blue: #00d4ff;
-    --glitch-1: #ff00ff;
-    --glitch-2: #00ffff;
+    --bg: #ffffff;
+    --fg: #000000;
+    --accent: #ff0055;
+    --gray: #666666;
 }
 
 * {
@@ -29,437 +24,478 @@
 }
 
 body {
-    background: var(--bg-deep);
-    color: var(--fg-primary);
-    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'DM Sans', sans-serif;
     overflow-x: hidden;
-    position: relative;
 }
 
-/* Animated grain overlay */
-body::before {
+/* Hero Section */
+.hero {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.hero-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    z-index: 1;
+}
+
+/* Placeholder image pattern */
+.hero-image::after {
     content: '';
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-image: 
-        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,.02) 2px, rgba(255,255,255,.02) 4px),
-        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,.02) 2px, rgba(255,255,255,.02) 4px);
-    pointer-events: none;
-    z-index: 1000;
-    animation: grain 8s steps(10) infinite;
-    opacity: 0.3;
+        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.02) 35px, rgba(255,255,255,.02) 70px);
+    opacity: 0.5;
 }
 
-@keyframes grain {
-    0%, 100% { transform: translate(0, 0); }
-    10% { transform: translate(-5%, -5%); }
-    20% { transform: translate(-10%, 5%); }
-    30% { transform: translate(5%, -10%); }
-    40% { transform: translate(-5%, 15%); }
-    50% { transform: translate(-10%, 5%); }
-    60% { transform: translate(15%, 0%); }
-    70% { transform: translate(0%, 15%); }
-    80% { transform: translate(-15%, 10%); }
-    90% { transform: translate(10%, 5%); }
-}
-
-/* Sound wave background */
-.wave-container {
-    position: fixed;
+.hero-overlay {
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: 0.03;
-    pointer-events: none;
-    z-index: 0;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 100%);
+    z-index: 2;
 }
 
-.wave {
-    position: absolute;
-    width: 200%;
-    height: 200%;
-    top: -50%;
-    left: -50%;
-}
-
-.wave-line {
-    position: absolute;
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent-hot), transparent);
-    animation: wave-flow 20s linear infinite;
-}
-
-.wave-line:nth-child(1) { top: 20%; animation-delay: 0s; }
-.wave-line:nth-child(2) { top: 40%; animation-delay: -5s; }
-.wave-line:nth-child(3) { top: 60%; animation-delay: -10s; }
-.wave-line:nth-child(4) { top: 80%; animation-delay: -15s; }
-
-@keyframes wave-flow {
-    0% { transform: translateX(-50%) scaleY(1); }
-    25% { transform: translateX(-25%) scaleY(2); }
-    50% { transform: translateX(0%) scaleY(1); }
-    75% { transform: translateX(25%) scaleY(2); }
-    100% { transform: translateX(50%) scaleY(1); }
-}
-
-header {
+.hero-content {
     position: relative;
-    padding: 15vh 6vw 12vh;
-    text-align: left;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    z-index: 3;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3vw;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    color: white;
+    font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.nav-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.nav-left a {
+    color: white;
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.nav-left a:hover {
+    opacity: 1;
+}
+
+.nav-right {
+    color: white;
+    opacity: 0.5;
+    font-weight: 300;
+}
+
+.hero-title {
+    position: absolute;
+    bottom: 15vh;
+    left: 3vw;
+    right: 3vw;
+}
+
+.hero-title h1 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(4rem, 18vw, 20rem);
+    line-height: 0.85;
+    color: white;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+}
+
+.hero-title .subtitle {
+    margin-top: 2rem;
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    color: white;
+    font-weight: 300;
+    max-width: 600px;
+}
+
+.hero-meta {
+    position: absolute;
+    bottom: 3vw;
+    right: 3vw;
+    text-align: right;
+    color: white;
+    font-size: clamp(0.8rem, 1.2vw, 1rem);
+}
+
+.hero-meta .status {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+}
+
+.hero-meta .date {
+    opacity: 0.6;
+    font-weight: 300;
+}
+
+/* Section: Concept */
+.section-concept {
+    position: relative;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+}
+
+.concept-text {
+    padding: 8vw;
+    position: relative;
+    z-index: 2;
+}
+
+.concept-text h2 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(3rem, 8vw, 10rem);
+    line-height: 0.9;
+    margin-bottom: 3rem;
+    text-transform: uppercase;
+}
+
+.concept-text p {
+    font-size: clamp(1rem, 1.8vw, 1.3rem);
+    line-height: 1.6;
+    color: var(--gray);
+    margin-bottom: 1.5rem;
+    max-width: 40ch;
+}
+
+.concept-text .highlight {
+    color: var(--fg);
+    font-weight: 500;
+}
+
+.concept-image {
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    background: #f5f5f5;
+}
+
+.concept-image::after {
+    content: 'IMAGE À VENIR';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 2rem;
+    color: #ddd;
+    letter-spacing: 0.2em;
+}
+
+/* Section: En cours */
+.section-encours {
+    background: var(--fg);
+    color: var(--bg);
+    padding: 15vh 3vw;
+    position: relative;
     overflow: hidden;
 }
 
-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(ellipse at top left, rgba(0,255,136,0.08), transparent 50%),
-                radial-gradient(ellipse at bottom right, rgba(0,212,255,0.06), transparent 50%);
-    pointer-events: none;
-}
-
-h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(3rem, 12vw, 9rem);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    margin-bottom: 1.5rem;
+.encours-text {
     position: relative;
-    display: inline-block;
-    animation: glitch-title 5s infinite;
-    line-height: 0.9;
-}
-
-@keyframes glitch-title {
-    0%, 90%, 100% {
-        text-shadow: none;
-        transform: translate(0);
-    }
-    92% {
-        text-shadow: 
-            -2px 0 var(--glitch-1),
-            2px 0 var(--glitch-2);
-        transform: translate(-2px, 0);
-    }
-    94% {
-        text-shadow: 
-            2px 0 var(--glitch-1),
-            -2px 0 var(--glitch-2);
-        transform: translate(2px, 0);
-    }
-}
-
-.subtitle {
-    font-size: clamp(0.9rem, 2vw, 1.1rem);
-    color: var(--fg-dim);
-    letter-spacing: 0.08em;
-    text-transform: lowercase;
-    display: flex;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    align-items: center;
-    animation: fade-in 1s ease-out 0.3s both;
-}
-
-.subtitle span {
-    position: relative;
-    padding: 0.3rem 0;
-}
-
-.subtitle span::before {
-    content: '//';
-    position: absolute;
-    left: -1.2rem;
-    color: var(--accent-hot);
-    opacity: 0.6;
-}
-
-@keyframes fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-section {
+    z-index: 2;
     max-width: 1400px;
-    margin: auto;
-    padding: clamp(4rem, 10vh, 8rem) 6vw;
-    position: relative;
+    margin: 0 auto;
 }
 
-h2 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 600;
-    margin-bottom: 2.5rem;
-    letter-spacing: -0.01em;
-    position: relative;
-    display: inline-block;
+.encours-text h2 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(2.5rem, 12vw, 15rem);
+    line-height: 0.85;
+    margin-bottom: 4rem;
+    text-transform: uppercase;
 }
 
-h2::after {
-    content: '';
-    position: absolute;
-    bottom: -0.5rem;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent-hot), transparent);
-    animation: line-grow 1.5s ease-out;
+.encours-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 4rem;
+    margin-top: 5rem;
 }
 
-@keyframes line-grow {
-    from { width: 0; }
-    to { width: 100%; }
+.encours-item h3 {
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    margin-bottom: 1rem;
+    font-weight: 500;
 }
 
-p {
-    color: var(--fg-dim);
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
-    font-size: clamp(0.95rem, 1.8vw, 1.05rem);
-    max-width: 70ch;
+.encours-item p {
+    color: #999;
+    line-height: 1.7;
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
 }
 
-.highlight {
-    color: var(--fg-primary);
-    font-weight: 400;
-    position: relative;
-    background: linear-gradient(120deg, transparent 0%, rgba(0,255,136,0.15) 50%, transparent 100%);
-    background-size: 200% 100%;
-    padding: 0 0.2em;
-    transition: background-position 0.6s ease;
+/* Section: Modules */
+.section-modules {
+    padding: 15vh 3vw;
 }
 
-.highlight:hover {
-    background-position: 100% 0;
+.modules-header {
+    margin-bottom: 8vh;
 }
 
-/* Grid system */
-.grid {
+.modules-header h2 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(3rem, 10vw, 12rem);
+    line-height: 0.9;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+}
+
+.modules-header p {
+    font-size: clamp(1rem, 1.8vw, 1.3rem);
+    color: var(--gray);
+    max-width: 60ch;
+}
+
+.modules-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
+    gap: 2px;
+    background: var(--fg);
 }
 
-.card {
-    background: var(--bg-mid);
-    border: 1px solid rgba(255,255,255,0.06);
-    padding: 2rem;
+.module-card {
+    background: var(--bg);
+    padding: 3rem 2rem;
     position: relative;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s ease;
     cursor: pointer;
 }
 
-.card::before {
+.module-card::before {
     content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.4s ease;
+    z-index: 1;
+}
+
+.module-card:hover::before {
+    width: 100%;
+}
+
+.module-card:hover {
+    color: white;
+}
+
+.module-card:hover h3,
+.module-card:hover p {
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+.module-card h3 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    transition: color 0.4s ease;
+}
+
+.module-card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--gray);
+    transition: color 0.4s ease;
+}
+
+/* Section: Call to Action */
+.section-cta {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0a0a0a;
+    color: white;
+    overflow: hidden;
+}
+
+.cta-bg {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(0,255,136,0.03), transparent 60%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
+    background: linear-gradient(45deg, #1a1a1a 0%, #0a0a0a 100%);
 }
 
-.card::after {
+.cta-bg::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(0,255,136,0.1), transparent);
-    transition: left 0.6s ease;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    background: radial-gradient(circle, rgba(255,0,85,0.1) 0%, transparent 70%);
 }
 
-.card:hover {
-    border-color: rgba(0,255,136,0.3);
-    transform: translateY(-8px);
-    box-shadow: 
-        0 20px 40px rgba(0,0,0,0.4),
-        0 0 0 1px rgba(0,255,136,0.1);
-}
-
-.card:hover::before {
-    opacity: 1;
-}
-
-.card:hover::after {
-    left: 100%;
-}
-
-.card h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: var(--fg-primary);
+.cta-content {
     position: relative;
-    z-index: 1;
-    letter-spacing: -0.01em;
+    z-index: 2;
+    text-align: center;
+    padding: 3vw;
 }
 
-.card h3::before {
-    content: '▸';
-    color: var(--accent-hot);
-    margin-right: 0.5rem;
-    opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    display: inline-block;
-    transform: translateX(-10px);
-}
-
-.card:hover h3::before {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.card p {
-    position: relative;
-    z-index: 1;
-    font-size: 0.95rem;
-    margin: 0;
-}
-
-/* Intentions section styling */
-.intentions-list {
-    list-style: none;
-    margin-top: 2rem;
-}
-
-.intentions-list li {
-    color: var(--fg-dim);
-    padding: 0.8rem 0;
-    border-left: 2px solid rgba(255,255,255,0.06);
-    padding-left: 2rem;
-    margin-bottom: 0.5rem;
-    position: relative;
-    transition: all 0.3s ease;
-    font-size: clamp(1rem, 2vw, 1.15rem);
-}
-
-.intentions-list li::before {
-    content: '◆';
-    position: absolute;
-    left: -0.6rem;
-    color: var(--accent-hot);
-    transform: scale(0);
-    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.intentions-list li:hover {
-    color: var(--fg-primary);
-    border-left-color: var(--accent-hot);
-    padding-left: 2.5rem;
-}
-
-.intentions-list li:hover::before {
-    transform: scale(1);
-}
-
-/* Button styling */
-.button {
-    display: inline-block;
-    margin-top: 3rem;
-    padding: 1rem 2.5rem;
-    background: transparent;
-    color: var(--fg-primary);
-    text-decoration: none;
-    font-weight: 400;
-    font-size: 0.95rem;
-    letter-spacing: 0.08em;
+.cta-content h2 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(3rem, 15vw, 18rem);
+    line-height: 0.85;
+    margin-bottom: 3rem;
     text-transform: uppercase;
-    border: 1px solid var(--accent-hot);
+}
+
+.cta-content p {
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    margin-bottom: 4rem;
+    font-weight: 300;
+    max-width: 50ch;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.8;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 1.5rem 4rem;
+    border: 2px solid white;
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
-    transition: all 0.4s ease;
 }
 
-.button::before {
+.cta-button::before {
     content: '';
     position: absolute;
     top: 0;
     left: -100%;
     width: 100%;
     height: 100%;
-    background: var(--accent-hot);
+    background: white;
     transition: left 0.4s ease;
     z-index: -1;
 }
 
-.button:hover {
-    color: var(--bg-deep);
-    box-shadow: 0 0 20px rgba(0,255,136,0.3);
+.cta-button:hover {
+    color: var(--fg);
 }
 
-.button:hover::before {
+.cta-button:hover::before {
     left: 0;
 }
 
 /* Footer */
-footer {
+.footer {
+    background: var(--fg);
+    color: var(--bg);
+    padding: 8vh 3vw;
     text-align: center;
-    padding: 4rem 6vw;
-    border-top: 1px solid rgba(255,255,255,0.06);
-    color: var(--fg-dim);
-    font-size: 0.85rem;
-    letter-spacing: 0.05em;
-    position: relative;
 }
 
-footer::before {
-    content: '∿∿∿';
-    display: block;
-    margin-bottom: 1.5rem;
-    color: var(--accent-hot);
-    opacity: 0.3;
-    font-size: 1.5rem;
-    letter-spacing: 0.5rem;
+.footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-/* Pulse effect on accent elements */
-@keyframes pulse-glow {
-    0%, 100% {
-        opacity: 0.6;
-        filter: brightness(1);
+.footer-title {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(2rem, 6vw, 6rem);
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+}
+
+.footer-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    font-size: 0.9rem;
+    opacity: 0.6;
+}
+
+.footer-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.footer-links a:hover {
+    opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .section-concept {
+        grid-template-columns: 1fr;
     }
-    50% {
-        opacity: 1;
-        filter: brightness(1.3);
+    
+    .concept-image {
+        height: 50vh;
+        position: relative;
+    }
+    
+    .encours-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-info {
+        flex-direction: column;
+        gap: 2rem;
+        text-align: center;
     }
 }
 
-/* Stagger animations for cards */
-.card {
-    animation: card-appear 0.6s ease-out both;
-}
-
-.card:nth-child(1) { animation-delay: 0.1s; }
-.card:nth-child(2) { animation-delay: 0.2s; }
-.card:nth-child(3) { animation-delay: 0.3s; }
-.card:nth-child(4) { animation-delay: 0.4s; }
-.card:nth-child(5) { animation-delay: 0.5s; }
-.card:nth-child(6) { animation-delay: 0.6s; }
-
-@keyframes card-appear {
+/* Scroll animations */
+@keyframes fadeInUp {
     from {
         opacity: 0;
         transform: translateY(40px);
@@ -470,168 +506,218 @@ footer::before {
     }
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    header {
-        padding: 10vh 5vw 8vh;
-    }
-    
-    section {
-        padding: 3rem 5vw;
-    }
-    
-    .subtitle {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.8rem;
-    }
-    
-    .grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
+.concept-text,
+.modules-header,
+.encours-text {
+    animation: fadeInUp 1s ease-out both;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-    width: 8px;
+.module-card {
+    animation: fadeInUp 0.8s ease-out both;
 }
 
-::-webkit-scrollbar-track {
-    background: var(--bg-deep);
+.module-card:nth-child(1) { animation-delay: 0.1s; }
+.module-card:nth-child(2) { animation-delay: 0.2s; }
+.module-card:nth-child(3) { animation-delay: 0.3s; }
+.module-card:nth-child(4) { animation-delay: 0.4s; }
+.module-card:nth-child(5) { animation-delay: 0.5s; }
+.module-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Custom cursor effect */
+body {
+    cursor: crosshair;
 }
 
-::-webkit-scrollbar-thumb {
-    background: rgba(0,255,136,0.3);
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: rgba(0,255,136,0.5);
+a, button, .module-card {
+    cursor: pointer;
 }
 </style>
 </head>
 
 <body>
 
-<!-- Sound wave background -->
-<div class="wave-container">
-    <div class="wave">
-        <div class="wave-line"></div>
-        <div class="wave-line"></div>
-        <div class="wave-line"></div>
-        <div class="wave-line"></div>
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-image"></div>
+    <div class="hero-overlay"></div>
+    
+    <div class="hero-content">
+        <nav class="nav">
+            <div class="nav-left">
+                <a href="#concept">Concept</a>
+                <a href="#modules">Modules</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="nav-right">
+                Montréal, QC
+            </div>
+        </nav>
+        
+        <div class="hero-title">
+            <h1>HORS<br>CHAMP</h1>
+            <div class="subtitle">
+                Machine sonore conceptuelle · AI · Performance
+            </div>
+        </div>
+        
+        <div class="hero-meta">
+            <div class="status">PROJET EN DÉVELOPPEMENT</div>
+            <div class="date">2026</div>
+        </div>
     </div>
-</div>
-
-<header>
-    <h1>HORS CHAMP</h1>
-    <div class="subtitle">
-        <span>machine sonore conceptuelle</span>
-        <span>AI</span>
-        <span>performance</span>
-        <span>expérimentation</span>
-    </div>
-</header>
-
-<section>
-    <h2>Une machine musicale hors norme</h2>
-
-    <p>
-        <span class="highlight">hors champ</span> est une interface sonore expérimentale
-        qui transforme des <span class="highlight">concepts, mots et états perceptifs</span>
-        en matière musicale.
-    </p>
-
-    <p>
-        Ni DAW traditionnel, ni simple générateur, l'application agit comme une
-        <span class="highlight">machine d'interprétation conceptuelle</span> :
-        chaque module devient un geste, chaque mot devient une texture.
-    </p>
-
-    <p>
-        L'utilisateur navigue entre <span class="highlight">banques de concepts</span>,
-        manipule des intensités, active des modes cognitifs et observe la
-        construction du prompt en temps réel via une <span class="highlight">trace DOS</span>.
-    </p>
 </section>
 
-<section>
-    <h2>Fonctionnement</h2>
+<!-- Concept Section -->
+<section class="section-concept" id="concept">
+    <div class="concept-text">
+        <h2>UNE MACHINE HORS NORME</h2>
+        
+        <p>
+            <span class="highlight">hors champ</span> est une interface sonore expérimentale
+            qui transforme des concepts, mots et états perceptifs en matière musicale.
+        </p>
+        
+        <p>
+            Ni DAW traditionnel, ni simple générateur, l'application agit comme une
+            <span class="highlight">machine d'interprétation conceptuelle</span> où
+            chaque module devient un geste, chaque mot devient une texture.
+        </p>
+        
+        <p>
+            Navigation entre banques de concepts, manipulation d'intensités,
+            activation de modes cognitifs et construction du prompt en temps réel
+            via une <span class="highlight">trace DOS</span>.
+        </p>
+    </div>
+    
+    <div class="concept-image"></div>
+</section>
 
-    <div class="grid">
-        <div class="card">
-            <h3>Modules conceptuels</h3>
+<!-- En cours Section -->
+<section class="section-encours">
+    <div class="encours-text">
+        <h2>PROJET<br>EN COURS</h2>
+        
+        <p style="color: #999; font-size: clamp(1rem, 1.8vw, 1.3rem); line-height: 1.6; max-width: 60ch;">
+            Le projet est actuellement en développement actif. Je cherche un centre d'artiste
+            ou un espace de recherche où je pourrais développer et présenter ce travail.
+        </p>
+        
+        <div class="encours-grid">
+            <div class="encours-item">
+                <h3>Recherche & Développement</h3>
+                <p>
+                    Exploration des systèmes génératifs, traduction langage-son,
+                    et interfaces conceptuelles pour la performance live.
+                </p>
+            </div>
+            
+            <div class="encours-item">
+                <h3>Résidence recherchée</h3>
+                <p>
+                    Espace pour développer l'interface, créer du contenu visuel,
+                    et présenter le travail dans un contexte de recherche-création.
+                </p>
+            </div>
+            
+            <div class="encours-item">
+                <h3>Performance & Présentation</h3>
+                <p>
+                    Développement d'une approche performative unique explorant
+                    la machine comme interprète et co-créateur.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modules Section -->
+<section class="section-modules" id="modules">
+    <div class="modules-header">
+        <h2>MODULES</h2>
+        <p>
+            Chaque module représente une dimension de l'interface conceptuelle,
+            permettant de sculpter le son à travers le langage et les états perceptifs.
+        </p>
+    </div>
+    
+    <div class="modules-grid">
+        <div class="module-card">
+            <h3>Concepts</h3>
             <p>
-                Chaque cellule représente un concept (identité, silence, effacement…)
-                ou un mot libre. Leur activation influence directement la génération sonore.
+                Cellules représentant des concepts (identité, silence, effacement…)
+                ou mots libres qui influencent directement la génération sonore.
             </p>
         </div>
-
-        <div class="card">
+        
+        <div class="module-card">
             <h3>Cadre / Ambiance</h3>
             <p>
-                Détermine le contexte musical global :
-                minimal, techno, dub, noise, ambient, deep techno…
+                Contexte musical global : minimal, techno, dub, noise,
+                ambient, deep techno…
             </p>
         </div>
-
-        <div class="card">
+        
+        <div class="module-card">
             <h3>Feeling / State</h3>
             <p>
-                Modulateur émotionnel :
-                tension, fragile, isolation, confusion, calme…
+                Modulateur émotionnel : tension, fragile, isolation,
+                confusion, calme…
             </p>
         </div>
-
-        <div class="card">
+        
+        <div class="module-card">
             <h3>RAW / BRUT</h3>
             <p>
-                Dépouille la coloration stylistique et révèle une version plus
-                sèche, abstraite ou instable du preset.
+                Dépouille la coloration stylistique et révèle une version
+                plus sèche, abstraite ou instable du preset.
             </p>
         </div>
-
-        <div class="card">
-            <h3>Looper & temps</h3>
+        
+        <div class="module-card">
+            <h3>Looper & Temps</h3>
             <p>
                 Synchronisation BPM, enregistrement cyclique,
                 superposition de couches génératives et live input.
             </p>
         </div>
-
-        <div class="card">
+        
+        <div class="module-card">
             <h3>Trace / Narration</h3>
             <p>
-                Visualisation du prompt et des décisions sonores sous forme
-                de log rétro-informatique.
+                Visualisation du prompt et des décisions sonores
+                sous forme de log rétro-informatique.
             </p>
         </div>
     </div>
 </section>
 
-<section>
-    <h2>Intentions artistiques</h2>
-
-    <p>
-        hors champ explore :
-    </p>
-
-    <ul class="intentions-list">
-        <li>la traduction du langage en son</li>
-        <li>les biais des systèmes génératifs</li>
-        <li>la perception vs structure</li>
-        <li>la machine comme interprète</li>
-        <li>la poésie du prompt</li>
-    </ul>
-
-    <a class="button" href="#">
-        Voir le projet / documentation
-    </a>
+<!-- CTA Section -->
+<section class="section-cta" id="contact">
+    <div class="cta-bg"></div>
+    <div class="cta-content">
+        <h2>INTÉRESSÉ?</h2>
+        <p>
+            Centres d'artistes, espaces de recherche, collaborateurs :
+            discutons de ce projet expérimental.
+        </p>
+        <a href="mailto:contact@example.com" class="cta-button">Me contacter</a>
+    </div>
 </section>
 
-<footer>
-    hors champ · projet expérimental · Kim Maurice
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-title">HORS CHAMP</div>
+        <div class="footer-info">
+            <div>© 2026 Kim Maurice · Projet expérimental</div>
+            <div class="footer-links">
+                <a href="#">Instagram</a>
+                <a href="#">Email</a>
+                <a href="#">Portfolio</a>
+            </div>
+        </div>
+    </div>
 </footer>
 
 </body>
