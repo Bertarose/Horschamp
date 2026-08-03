@@ -7,7 +7,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -43,21 +43,9 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    display: block;
+    background: #0a0a0a;
     z-index: 1;
-}
-
-/* Placeholder image pattern */
-.hero-image::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.02) 35px, rgba(255,255,255,.02) 70px);
-    opacity: 0.5;
 }
 
 .hero-overlay {
@@ -197,19 +185,77 @@ body {
     height: 100vh;
     position: sticky;
     top: 0;
-    background: #f5f5f5;
+    background: #0a0a0a;
+    overflow: hidden;
 }
 
-.concept-image::after {
-    content: 'IMAGE À VENIR';
+.concept-image img {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: 'Archivo Black', sans-serif;
-    font-size: 2rem;
-    color: #ddd;
-    letter-spacing: 0.2em;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top left;
+    filter: grayscale(1) contrast(1.1) brightness(0.85);
+    transform: scale(1.02);
+    transition: filter 0.8s ease, transform 1.2s ease;
+}
+
+.concept-image:hover img {
+    filter: grayscale(0) contrast(1.02) brightness(1);
+    transform: scale(1);
+}
+
+/* trame de lignes façon écran cathodique, pour rappeler la "trace DOS" */
+.concept-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.15) 0px,
+        rgba(0,0,0,0.15) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+    pointer-events: none;
+    z-index: 2;
+    mix-blend-mode: multiply;
+}
+
+.concept-image .caption {
+    position: absolute;
+    left: 2rem;
+    bottom: 2rem;
+    z-index: 3;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: #fff;
+    text-transform: uppercase;
+    opacity: 0.75;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.concept-image .caption::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: inline-block;
+    animation: blink 1.6s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
 }
 
 /* Section: En cours */
@@ -353,18 +399,8 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(45deg, #1a1a1a 0%, #0a0a0a 100%);
-}
-
-.cta-bg::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80%;
-    height: 80%;
-    background: radial-gradient(circle, rgba(255,0,85,0.1) 0%, transparent 70%);
+    display: block;
+    background: #0a0a0a;
 }
 
 .cta-content {
@@ -538,7 +574,7 @@ a, button, .module-card {
 
 <!-- Hero Section -->
 <section class="hero">
-    <div class="hero-image"></div>
+    <canvas class="hero-image" id="gradient-hero"></canvas>
     <div class="hero-overlay"></div>
     
     <div class="hero-content">
@@ -590,7 +626,10 @@ a, button, .module-card {
         </p>
     </div>
     
-    <div class="concept-image"></div>
+    <div class="concept-image">
+        <img src="horschamp-app.webp" alt="Interface de hors champ — console de génération sonore en développement" loading="lazy">
+        <div class="caption">interface live · build en cours</div>
+    </div>
 </section>
 
 <!-- En cours Section -->
@@ -694,7 +733,7 @@ a, button, .module-card {
 
 <!-- CTA Section -->
 <section class="section-cta" id="contact">
-    <div class="cta-bg"></div>
+    <canvas class="cta-bg" id="gradient-cta"></canvas>
     <div class="cta-content">
         <h2>INTÉRESSÉ?</h2>
         <p>
@@ -719,6 +758,260 @@ a, button, .module-card {
         </div>
     </div>
 </footer>
+
+<script>
+/* ============================================================
+   hors champ — shader gradient engine
+   Fond WebGL généré par shader (fbm + domain warping + grain),
+   dans l'esprit shadergradient.co, sans dépendance externe.
+   ============================================================ */
+(function () {
+    const VERT_SRC = `
+        attribute vec2 aPosition;
+        void main() {
+            gl_Position = vec4(aPosition, 0.0, 1.0);
+        }
+    `;
+
+    const FRAG_SRC = `
+        precision highp float;
+        uniform vec2 uResolution;
+        uniform float uTime;
+        uniform vec2 uMouse;
+        uniform vec3 uColorA;
+        uniform vec3 uColorB;
+        uniform vec3 uColorC;
+        uniform float uSpeed;
+        uniform float uGrain;
+
+        float hash(vec2 p) {
+            p = fract(p * vec2(123.34, 456.21));
+            p += dot(p, p + 45.32);
+            return fract(p.x * p.y);
+        }
+
+        float noise(vec2 p) {
+            vec2 i = floor(p);
+            vec2 f = fract(p);
+            float a = hash(i);
+            float b = hash(i + vec2(1.0, 0.0));
+            float c = hash(i + vec2(0.0, 1.0));
+            float d = hash(i + vec2(1.0, 1.0));
+            vec2 u = f * f * (3.0 - 2.0 * f);
+            return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+        }
+
+        float fbm(vec2 p) {
+            float v = 0.0;
+            float amp = 0.5;
+            for (int i = 0; i < 5; i++) {
+                v += amp * noise(p);
+                p *= 2.0;
+                amp *= 0.5;
+            }
+            return v;
+        }
+
+        void main() {
+            vec2 uv = gl_FragCoord.xy / uResolution.xy;
+            float aspect = uResolution.x / uResolution.y;
+            vec2 p = uv;
+            p.x *= aspect;
+
+            vec2 mouse = uMouse;
+            mouse.x *= aspect;
+
+            float t = uTime * uSpeed;
+
+            /* domain warping — plusieurs couches de fbm qui se déforment mutuellement */
+            vec2 q = vec2(fbm(p * 2.0 + t * 0.06), fbm(p * 2.0 + vec2(5.2, 1.3) - t * 0.05));
+            vec2 r = vec2(
+                fbm(p * 2.0 + 3.0 * q + vec2(1.7, 9.2) + t * 0.09),
+                fbm(p * 2.0 + 3.0 * q + vec2(8.3, 2.8) + t * 0.07)
+            );
+            float f = fbm(p * 2.0 + 3.0 * r);
+
+            /* halo qui suit le curseur / le point d'ancrage */
+            float distToMouse = distance(p, mouse);
+            float glow = smoothstep(0.9, 0.0, distToMouse) * 0.35;
+
+            vec3 color = mix(uColorA, uColorB, clamp(f * 1.6, 0.0, 1.0));
+            color = mix(color, uColorC, clamp(pow(r.x, 1.4) * 0.9, 0.0, 1.0));
+            color += glow * uColorC;
+
+            /* grain filmique */
+            float grain = (hash(gl_FragCoord.xy + uTime * 60.0) - 0.5) * uGrain;
+            color += grain;
+
+            /* vignette pour garder le texte lisible sur les bords */
+            float vig = smoothstep(1.15, 0.25, distance(uv, vec2(0.5, 0.5)));
+            color *= mix(0.55, 1.0, vig);
+
+            gl_FragColor = vec4(color, 1.0);
+        }
+    `;
+
+    function hexToVec3(hex) {
+        const n = parseInt(hex.replace('#', ''), 16);
+        return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+    }
+
+    function compileShader(gl, type, src) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, src);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            console.warn('Shader gradient: compile error', gl.getShaderInfoLog(shader));
+            gl.deleteShader(shader);
+            return null;
+        }
+        return shader;
+    }
+
+    function initShaderGradient(canvas, opts) {
+        const gl = canvas.getContext('webgl', { antialias: true, alpha: false }) ||
+                    canvas.getContext('experimental-webgl');
+        if (!gl) return null; // le fond CSS de secours reste visible
+
+        const vertShader = compileShader(gl, gl.VERTEX_SHADER, VERT_SRC);
+        const fragShader = compileShader(gl, gl.FRAGMENT_SHADER, FRAG_SRC);
+        if (!vertShader || !fragShader) return null;
+
+        const program = gl.createProgram();
+        gl.attachShader(program, vertShader);
+        gl.attachShader(program, fragShader);
+        gl.linkProgram(program);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+            console.warn('Shader gradient: link error', gl.getProgramInfoLog(program));
+            return null;
+        }
+        gl.useProgram(program);
+
+        const buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+            -1, -1,  1, -1,  -1, 1,
+            -1, 1,   1, -1,   1, 1
+        ]), gl.STATIC_DRAW);
+
+        const aPosition = gl.getAttribLocation(program, 'aPosition');
+        gl.enableVertexAttribArray(aPosition);
+        gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
+
+        const uniforms = {
+            uResolution: gl.getUniformLocation(program, 'uResolution'),
+            uTime: gl.getUniformLocation(program, 'uTime'),
+            uMouse: gl.getUniformLocation(program, 'uMouse'),
+            uColorA: gl.getUniformLocation(program, 'uColorA'),
+            uColorB: gl.getUniformLocation(program, 'uColorB'),
+            uColorC: gl.getUniformLocation(program, 'uColorC'),
+            uSpeed: gl.getUniformLocation(program, 'uSpeed'),
+            uGrain: gl.getUniformLocation(program, 'uGrain')
+        };
+
+        const colorA = hexToVec3(opts.colorA);
+        const colorB = hexToVec3(opts.colorB);
+        const colorC = hexToVec3(opts.colorC);
+
+        let mouse = [opts.anchor[0], opts.anchor[1]];
+        let targetMouse = mouse.slice();
+
+        canvas.addEventListener('pointermove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            targetMouse = [
+                (e.clientX - rect.left) / rect.width,
+                1.0 - (e.clientY - rect.top) / rect.height
+            ];
+        });
+        canvas.addEventListener('pointerleave', () => {
+            targetMouse = opts.anchor.slice();
+        });
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function resize() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const w = canvas.clientWidth * dpr;
+            const h = canvas.clientHeight * dpr;
+            if (canvas.width !== w || canvas.height !== h) {
+                canvas.width = w;
+                canvas.height = h;
+                gl.viewport(0, 0, w, h);
+            }
+        }
+
+        let visible = true;
+        if ('IntersectionObserver' in window) {
+            new IntersectionObserver((entries) => {
+                visible = entries[0].isIntersecting;
+            }, { threshold: 0.01 }).observe(canvas);
+        }
+
+        let start = performance.now();
+        let raf = null;
+
+        function frame(now) {
+            raf = requestAnimationFrame(frame);
+            if (!visible) return;
+
+            resize();
+
+            mouse[0] += (targetMouse[0] - mouse[0]) * 0.04;
+            mouse[1] += (targetMouse[1] - mouse[1]) * 0.04;
+
+            const elapsed = prefersReducedMotion ? 0 : (now - start) / 1000;
+
+            gl.useProgram(program);
+            gl.uniform2f(uniforms.uResolution, canvas.width, canvas.height);
+            gl.uniform1f(uniforms.uTime, elapsed);
+            gl.uniform2f(uniforms.uMouse, mouse[0], mouse[1]);
+            gl.uniform3f(uniforms.uColorA, colorA[0], colorA[1], colorA[2]);
+            gl.uniform3f(uniforms.uColorB, colorB[0], colorB[1], colorB[2]);
+            gl.uniform3f(uniforms.uColorC, colorC[0], colorC[1], colorC[2]);
+            gl.uniform1f(uniforms.uSpeed, opts.speed);
+            gl.uniform1f(uniforms.uGrain, opts.grain);
+
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+        }
+
+        raf = requestAnimationFrame(frame);
+        return { stop: () => cancelAnimationFrame(raf) };
+    }
+
+    function boot() {
+        const heroCanvas = document.getElementById('gradient-hero');
+        const ctaCanvas = document.getElementById('gradient-cta');
+
+        if (heroCanvas) {
+            initShaderGradient(heroCanvas, {
+                colorA: '#0a0a0a',
+                colorB: '#2a0a24',
+                colorC: '#ff0055',
+                speed: 1.0,
+                grain: 0.045,
+                anchor: [0.7, 0.65]
+            });
+        }
+
+        if (ctaCanvas) {
+            initShaderGradient(ctaCanvas, {
+                colorA: '#0a0a0a',
+                colorB: '#1a0a2e',
+                colorC: '#ff0055',
+                speed: 0.7,
+                grain: 0.05,
+                anchor: [0.5, 0.5]
+            });
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+    } else {
+        boot();
+    }
+})();
+</script>
 
 </body>
 </html>
