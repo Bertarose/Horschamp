@@ -366,6 +366,35 @@ body {
     font-size: clamp(0.9rem, 1.5vw, 1.1rem);
 }
 
+
+/* Section: Empreinte environnementale */
+.section-empreinte { padding: 15vh 3vw; background: var(--bg); border-top: 2px solid #000; }
+.empreinte-inner { max-width: 1400px; margin: 0 auto; }
+.empreinte-inner h2 { font-family: 'Archivo Black', sans-serif; font-size: clamp(3rem, 10vw, 12rem); line-height: 0.9; text-transform: uppercase; margin-bottom: 2rem; }
+.empreinte-intro { font-size: clamp(1rem, 1.8vw, 1.3rem); color: #444; max-width: 62ch; line-height: 1.6; margin-bottom: 3.5rem; }
+.eco-levels { list-style: none; border-top: 2px solid #000; margin-bottom: 4rem; }
+.eco-level { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 2fr) 9rem; gap: 2rem; align-items: start; padding: 1.6rem 0; border-bottom: 1px solid #c9c2b3; }
+.eco-level h3 { font-family: 'Syne', 'Archivo Black', sans-serif; font-weight: 800; font-size: 1.2rem; line-height: 1.25; }
+.eco-level p { color: #444; line-height: 1.6; font-size: 0.98rem; }
+.eco-level p a { color: #000; }
+.eco-meter { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start; }
+.eco-bars { display: flex; gap: 4px; }
+.eco-bars i { display: block; width: 26px; height: 10px; border: 1px solid #000; }
+.eco-bars i.on { background: #000; }
+.eco-tag { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 0.1em; }
+.eco-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3rem; }
+.eco-cols h3 { font-family: 'Space Mono', monospace; font-size: 0.8rem; letter-spacing: 0.12em; margin-bottom: 1.2rem; }
+.eco-cols ul { list-style: none; }
+.eco-cols li { position: relative; padding: 0.7rem 0 0.7rem 1.4rem; border-bottom: 1px solid #c9c2b3; line-height: 1.55; color: #222; font-size: 0.98rem; }
+.eco-cols li::before { content: '—'; position: absolute; left: 0; color: #000; }
+.eco-cols li.soon::before { content: '○'; color: var(--accent-ink); }
+.eco-cols li .soon-tag { font-family: 'Space Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; color: var(--accent-ink); margin-right: 0.4rem; }
+.eco-note { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: #555; margin-top: 3rem; line-height: 1.7; max-width: 80ch; }
+@media (max-width: 800px) {
+    .eco-level { grid-template-columns: minmax(0, 1fr); gap: 0.7rem; }
+    .eco-cols { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+}
+
 /* Section: Modules */
 .section-modules {
     padding: 15vh 3vw;
@@ -1561,6 +1590,36 @@ a, button, .module-card {
     </div>
 </section>
 
+<section class="section-empreinte" id="empreinte">
+    <div class="empreinte-inner">
+        <h2>EMPREINTE</h2>
+        <p class="empreinte-intro">Hors Champ utilise de l’IA, et l’IA a un coût environnemental : électricité, eau pour refroidir les serveurs, fabrication du matériel. Je préfère le dire clairement plutôt que de l’ignorer. Voici ce que je sais, ce que je ne sais pas, et les choix que j’ai faits.</p>
+        <ul class="eco-levels">
+            <li class="eco-level">
+                <h3>Fonctions locales</h3>
+                <p>Beat Lab, synthés, rack d’effets, looper, visuels Hydra et mode sans IA tournent sur ton ordinateur. Aucun centre de données n’est sollicité.</p>
+                <div class="eco-meter"><span class="eco-bars" aria-hidden="true"><i class="on"></i><i></i><i></i></span><span class="eco-tag">TRÈS FAIBLE</span></div>
+            </li>
+            <li class="eco-level">
+                <h3>Requêtes à Gemini</h3>
+                <p>SYNC, définitions, Speech to Sound : des requêtes ponctuelles. Selon <a href="https://cloud.google.com/blog/products/infrastructure/measuring-the-environmental-impact-of-ai-inference" target="_blank" rel="noopener">les mesures publiées par Google</a>, une requête texte médiane à Gemini consomme environ 0,24 Wh et 0,26 mL d’eau.</p>
+                <div class="eco-meter"><span class="eco-bars" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span><span class="eco-tag">FAIBLE</span></div>
+            </li>
+            <li class="eco-level">
+                <h3>Musique IA en continu (Lyria)</h3>
+                <p>Quand PLAY est actif, un modèle génère du son sans arrêt dans un centre de données. Google ne publie pas de chiffre pour Lyria, et je ne veux pas en inventer un. C’est la partie à utiliser avec intention.</p>
+                <div class="eco-meter"><span class="eco-bars" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="eco-tag">LA PLUS ÉLEVÉE</span></div>
+            </li>
+        </ul>
+        <div class="eco-cols">
+            <div><h3>MES CHOIX</h3><ul><li>Rien ne joue automatiquement : la génération IA démarre seulement quand tu cliques sur PLAY.</li><li>Tous les modules démarrent éteints : tu allumes seulement ce dont tu as besoin.</li><li>Un mode complet sans IA, pour pratiquer ou jouer sans passer par un centre de données.</li><li>Le serveur se met en veille quand personne ne l’utilise.</li><li>Cette page reste légère : pas de vidéo lourde, images compressées, animation ralentie et arrêtée hors de l’écran.</li><li class="soon"><span class="soon-tag">À VENIR</span>Une pause automatique de la génération IA après une période sans interaction.</li></ul></div>
+            <div><h3>CE QUE TU PEUX FAIRE</h3><ul><li>Arrête PLAY quand tu n’écoutes pas, et ferme l’onglet après ta session.</li><li>Pratique en mode sans IA, et garde Lyria pour les moments où tu joues vraiment.</li><li>Préfère une bonne session de création à de longues heures de génération en arrière-plan.</li></ul></div>
+        </div>
+        <p class="eco-note">Ces informations reflètent ce que je sais en novembre 2026. Je mettrai cette section à jour quand des données plus précises seront publiées. Tes questions et suggestions sont les bienvenues : info@kimmaurice.com.</p>
+    </div>
+</section>
+
+
 <!-- En cours Section -->
 <section class="section-encours">
     <div class="encours-text">
@@ -1673,6 +1732,7 @@ a, button, .module-card {
             <div class="footer-links">
                 <a href="https://horschamp.ai.studio" target="_blank" rel="noopener">App</a>
                 <a href="guide/HORS-CHAMP_guide.pdf" target="_blank" rel="noopener">Guide (PDF)</a>
+                <a href="#empreinte">Empreinte</a>
                 <a href="mailto:info@kimmaurice.com">Email</a>
                 <a href="https://kimmaurice.com" target="_blank" rel="noopener">Portfolio</a>
             </div>
@@ -1840,7 +1900,7 @@ a, button, .module-card {
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         function resize() {
-            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
             const w = canvas.clientWidth * dpr;
             const h = canvas.clientHeight * dpr;
             if (canvas.width !== w || canvas.height !== h) {
@@ -1860,9 +1920,13 @@ a, button, .module-card {
         let start = performance.now();
         let raf = null;
 
+        let last = 0;
         function frame(now) {
             raf = requestAnimationFrame(frame);
             if (!visible) return;
+            /* sobriété : 30 images/s au plus, 1 image/s si l'utilisateur préfère moins de mouvement */
+            if (now - last < (prefersReducedMotion ? 1000 : 33)) return;
+            last = now;
 
             resize();
 
