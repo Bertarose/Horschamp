@@ -849,6 +849,45 @@ body {
     .player-time { grid-column: 1 / -1; }
 }
 
+/* Poisson bêta */
+.betta {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 50;
+    width: clamp(120px, 16vw, 200px);
+    pointer-events: none;
+    will-change: transform;
+}
+.betta[hidden] { display: none; }
+.betta img {
+    display: block;
+    width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+.betta-close {
+    pointer-events: auto;
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #000;
+    background: #EDE6D6;
+    color: #000;
+    font: 700 18px/1 'Space Mono', monospace;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.betta.is-resting .betta-close,
+.betta-close:focus-visible { opacity: 1; }
+.betta.is-resting { pointer-events: auto; }
+.betta-close:focus-visible { outline: 2px solid #EDE6D6; outline-offset: 2px; }
+
 /* Footer */
 .footer {
     background: var(--fg);
@@ -987,6 +1026,11 @@ a, button, .module-card {
 </head>
 
 <body>
+
+<div class="betta" id="betta" hidden>
+    <img src="img/betta.gif" alt="" aria-hidden="true" width="480" height="288" data-static="img/betta-static.png">
+    <button type="button" class="betta-close" aria-label="Fermer le poisson">×</button>
+</div>
 
 <!-- Hero Section -->
 <section class="hero">
@@ -1684,6 +1728,70 @@ a, button, .module-card {
         });
         seek.addEventListener('change', function () { dragging = false; });
     });
+})();
+</script>
+
+<script>
+/* Poisson bêta : traverse l'écran deux fois, puis se pose et devient immobile */
+(function () {
+    var el = document.getElementById('betta');
+    if (!el || !el.animate) return;
+    try { if (sessionStorage.getItem('hc-betta-closed') === '1') return; } catch (e) {}
+    var img = el.querySelector('img');
+    var btn = el.querySelector('.betta-close');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var anim = null, stopped = false;
+
+    function size() { return { w: el.offsetWidth, h: el.offsetHeight, vw: window.innerWidth, vh: window.innerHeight }; }
+    /* point de repos : espace libre en haut à droite du premier écran (coordonnées du document) */
+    function restPos(d) { return { x: d.vw - d.w - Math.max(24, d.vw * 0.05), y: Math.max(110, d.vh * 0.22) }; }
+
+    function rest(animated) {
+        var d = size(), pos = restPos(d);
+        var done = function () {
+            if (stopped) return;
+            if (anim) anim.cancel();
+            el.style.position = 'absolute';
+            el.style.transform = 'translate(' + pos.x + 'px,' + pos.y + 'px)';
+            img.src = img.getAttribute('data-static');
+            el.classList.add('is-resting');
+        };
+        if (!animated) { done(); return; }
+        anim = el.animate([
+            { transform: 'translate(' + (d.vw + 20) + 'px,' + (pos.y - window.scrollY - 40) + 'px)' },
+            { transform: 'translate(' + pos.x + 'px,' + (pos.y - window.scrollY) + 'px)' }
+        ], { duration: 2600, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' });
+        anim.onfinish = done;
+    }
+
+    function pass(n) {
+        if (stopped) return;
+        if (n >= 2) { rest(true); return; }
+        var d = size();
+        var y = d.vh * (n === 0 ? 0.55 : 0.32);
+        var frames = [];
+        for (var i = 0; i <= 10; i++) {
+            var t = i / 10;
+            var x = d.vw + 20 - t * (d.vw + d.w + 40);
+            frames.push({ transform: 'translate(' + x + 'px,' + (y + Math.sin(t * Math.PI * 3) * 22) + 'px)' });
+        }
+        anim = el.animate(frames, { duration: Math.max(7000, d.vw * 6.5), easing: 'linear', fill: 'forwards' });
+        anim.onfinish = function () { setTimeout(function () { pass(n + 1); }, 700); };
+    }
+
+    btn.addEventListener('click', function () {
+        stopped = true;
+        if (anim) anim.cancel();
+        el.hidden = true;
+        try { sessionStorage.setItem('hc-betta-closed', '1'); } catch (e) {}
+    });
+    window.addEventListener('resize', function () {
+        if (el.classList.contains('is-resting')) { var p = restPos(size()); el.style.transform = 'translate(' + p.x + 'px,' + p.y + 'px)'; }
+    });
+
+    el.style.transform = 'translate(' + (window.innerWidth + 40) + 'px,0)';
+    el.hidden = false;
+    if (reduce) { rest(false); } else { setTimeout(function () { pass(0); }, 1200); }
 })();
 </script>
 
