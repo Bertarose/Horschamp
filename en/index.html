@@ -558,6 +558,30 @@ body {
 .hero-meta a { color: inherit; text-decoration: none; }
 .hero-meta .launch-btn { margin-top: 1.5rem; }
 
+.see { margin-top: 10vh; }
+.shots {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+}
+.shot { margin: 0; }
+.shot a { display: block; overflow: hidden; border: 1px solid #333; aspect-ratio: 4 / 3; background: #111; }
+.shot img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s ease, filter 0.6s ease; filter: saturate(0.85); }
+.shot a:hover img { transform: scale(1.04); filter: saturate(1.1); }
+.shot a:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
+.shot figcaption {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: #aaa;
+    margin-top: 0.7rem;
+    line-height: 1.5;
+}
+@media (max-width: 900px) { .shots { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .shots { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .shot img { transition: none; } }
+
 /* Section: Essayer */
 .section-essayer {
     padding: 15vh 3vw;
@@ -947,6 +971,36 @@ a, button, .module-card {
                 <span class="player-focus"></span>
             </div>
             <span class="player-time"><span data-cur>0:00</span> / <span data-dur>5:45</span></span>
+        </div>
+
+        <div class="see">
+            <span class="ecouter-kicker">See it · the machine in action</span>
+            <div class="shots">
+            <figure class="shot">
+                <a href="../img/hydra-feedback.webp" target="_blank" rel="noopener"><img src="../img/hydra-feedback.webp" alt="Hydra VJ — sound-reactive generative visuals" loading="lazy" style="object-position: center"></a>
+                <figcaption>Hydra VJ — sound-reactive generative visuals</figcaption>
+            </figure>
+            <figure class="shot">
+                <a href="../img/hydra-livecode.webp" target="_blank" rel="noopener"><img src="../img/hydra-livecode.webp" alt="Hydra live code — edit the visuals live" loading="lazy" style="object-position: top"></a>
+                <figcaption>Hydra live code — edit the visuals live</figcaption>
+            </figure>
+            <figure class="shot">
+                <a href="../img/trace.webp" target="_blank" rel="noopener"><img src="../img/trace.webp" alt="Trace — watch the prompt being built" loading="lazy" style="object-fit: contain; background: #0b0d0c"></a>
+                <figcaption>Trace — watch the prompt being built</figcaption>
+            </figure>
+            <figure class="shot">
+                <a href="../img/cadre-texture.webp" target="_blank" rel="noopener"><img src="../img/cadre-texture.webp" alt="Frame & texture — Noise, Minimal techno, Tension, Disoriented" loading="lazy" style="object-position: top"></a>
+                <figcaption>Frame & texture — Noise, Minimal techno, Tension, Disoriented</figcaption>
+            </figure>
+            <figure class="shot">
+                <a href="../img/snapshots.webp" target="_blank" rel="noopener"><img src="../img/snapshots.webp" alt="Snapshots — 24 states to save and recall" loading="lazy" style="object-position: top left"></a>
+                <figcaption>Snapshots — 24 states to save and recall</figcaption>
+            </figure>
+            <figure class="shot">
+                <a href="../horschamp-app.webp" target="_blank" rel="noopener"><img src="../horschamp-app.webp" alt="Beat Lab — sequencer, kits and effects rack" loading="lazy" style="object-position: top left"></a>
+                <figcaption>Beat Lab — sequencer, kits and effects rack</figcaption>
+            </figure>
+            </div>
         </div>
     </div>
 </section>
