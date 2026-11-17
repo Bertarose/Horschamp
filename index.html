@@ -397,7 +397,7 @@ body {
     left: 0;
     width: 0;
     height: 100%;
-    background: var(--accent);
+    background: #0E0E0E;
     transition: width 0.4s ease;
     z-index: 1;
 }
@@ -407,15 +407,17 @@ body {
 }
 
 .module-card:hover {
-    color: #000;
+    color: #EDE6D6;
 }
 
 .module-card > * { position: relative; z-index: 2; }
 .module-card:hover h3,
+.module-card:hover .module-hook {
+    color: #EDE6D6;
+}
 .module-card:hover p,
-.module-card:hover .module-hook,
 .module-card:hover .module-num {
-    color: #000;
+    color: #b5b0a5;
 }
 
 .module-card h3 {
@@ -537,7 +539,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 0.8rem;
-    background: var(--lime);
+    background: #EDE6D6;
     color: #000;
     font-weight: 700;
     text-decoration: none;
@@ -546,14 +548,15 @@ body {
     letter-spacing: 0.12em;
     text-transform: uppercase;
     padding: 1.1rem 2rem;
-    border: 2px solid var(--lime);
+    border: 2px solid #EDE6D6;
     transition: background 0.3s, color 0.3s;
 }
-.launch-btn:hover { background: white; color: #000; border-color: white; }
-.launch-btn.dark { background: #000; color: var(--lime); border-color: #000; }
-.launch-btn.dark:hover { background: var(--lime); color: #000; border-color: #000; }
+.launch-btn:hover, .hero-meta .launch-btn:hover { background: transparent; color: #EDE6D6; border-color: #EDE6D6; }
+.hero-meta .launch-btn { color: #000; }
+.launch-btn.dark { background: #000; color: #EDE6D6; border-color: #000; }
+.launch-btn.dark:hover { background: transparent; color: #000; border-color: #000; }
 
-.nav-left a.nav-app { opacity: 1; color: var(--lime); font-weight: 500; }
+.nav-left a.nav-app { opacity: 1; color: #EDE6D6; font-weight: 500; text-decoration: underline; text-underline-offset: 4px; }
 
 .hero-meta a { color: inherit; text-decoration: none; }
 .hero-meta .launch-btn { margin-top: 1.5rem; }
@@ -569,7 +572,7 @@ body {
 .shot a { display: block; overflow: hidden; border: 1px solid #333; aspect-ratio: 4 / 3; background: #111; }
 .shot img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s ease, filter 0.6s ease; filter: saturate(0.85); }
 .shot a:hover img { transform: scale(1.04); filter: saturate(1.1); }
-.shot a:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
+.shot a:focus-visible { outline: 2px solid #EDE6D6; outline-offset: 3px; }
 .shot figcaption {
     font-family: 'Space Mono', monospace;
     font-size: 0.75rem;
@@ -829,14 +832,14 @@ body {
     font-family: 'Space Mono', monospace;
     font-size: 0.75rem;
     letter-spacing: 0.12em;
-    color: var(--lime);
+    color: #b5b0a5;
 }
 .sys-status span:first-child::before {
     content: '';
     display: inline-block;
     width: 7px; height: 7px;
     border-radius: 50%;
-    background: var(--lime);
+    background: var(--accent);
     margin-right: 0.6rem;
     vertical-align: middle;
     animation: blink 1.6s infinite;
