@@ -943,8 +943,10 @@ body {
     opacity: 0;
     transition: opacity 0.3s;
 }
+.betta.is-resting { width: clamp(96px, 11vw, 150px); }
 .betta.is-resting .betta-close,
 .betta-close:focus-visible { opacity: 1; }
+@media (hover: hover) { .betta.is-resting .betta-close { opacity: 0.75; } .betta.is-resting:hover .betta-close { opacity: 1; } }
 .betta.is-resting { pointer-events: auto; }
 .betta-close:focus-visible { outline: 2px solid #EDE6D6; outline-offset: 2px; }
 
@@ -1972,7 +1974,7 @@ a, button, .module-card {
 </script>
 
 <script>
-/* Poisson bêta : traverse l'écran deux fois, puis se pose et devient immobile */
+/* Poisson bêta : traverse l'écran deux fois, puis s'arrête dans le coin et y reste jusqu'à ce que l'usager le ferme */
 (function () {
     var el = document.getElementById('betta');
     if (!el || !el.animate) return;
@@ -1983,23 +1985,24 @@ a, button, .module-card {
     var anim = null, stopped = false;
 
     function size() { return { w: el.offsetWidth, h: el.offsetHeight, vw: window.innerWidth, vh: window.innerHeight }; }
-    /* point de repos : espace libre en haut à droite du premier écran (coordonnées du document) */
-    function restPos(d) { return { x: d.vw - d.w - Math.max(24, d.vw * 0.05), y: Math.max(110, d.vh * 0.22) }; }
+    /* point de repos : coin bas droit de l'écran ; le poisson y reste (position fixe) jusqu'à ce que l'usager le ferme */
+    function restPos(d) { var m = Math.max(16, Math.min(32, d.vw * 0.03)); return { x: d.vw - d.w - m, y: d.vh - d.h - m }; }
 
     function rest(animated) {
+        el.classList.add('is-resting');
         var d = size(), pos = restPos(d);
         var done = function () {
             if (stopped) return;
             if (anim) anim.cancel();
-            el.style.position = 'absolute';
+            el.style.position = 'fixed';
             el.style.transform = 'translate(' + pos.x + 'px,' + pos.y + 'px)';
             img.src = img.getAttribute('data-static');
             el.classList.add('is-resting');
         };
         if (!animated) { done(); return; }
         anim = el.animate([
-            { transform: 'translate(' + (d.vw + 20) + 'px,' + (pos.y - window.scrollY - 40) + 'px)' },
-            { transform: 'translate(' + pos.x + 'px,' + (pos.y - window.scrollY) + 'px)' }
+            { transform: 'translate(' + (d.vw + 20) + 'px,' + (pos.y - 40) + 'px)' },
+            { transform: 'translate(' + pos.x + 'px,' + pos.y + 'px)' }
         ], { duration: 2600, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' });
         anim.onfinish = done;
     }
