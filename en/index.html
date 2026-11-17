@@ -508,6 +508,19 @@ body {
 @media (max-width: 1000px) { .dl-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 640px) { .dl-grid { grid-template-columns: 1fr; gap: 1.5rem; } }
 
+
+/* Garde-fou mobile : l'app est faite pour ordinateur */
+.device-dialog { margin: auto; border: 2px solid #000; background: #EDE6D6; color: #000; padding: 0; max-width: min(92vw, 30rem); }
+.device-dialog::backdrop { background: rgba(14,14,14,0.85); }
+.device-dialog .dd-in { padding: 1.6rem 1.5rem 1.4rem; display: flex; flex-direction: column; gap: 0.9rem; }
+.device-dialog .dd-k { font-family: 'Space Mono', monospace; font-size: 0.72rem; letter-spacing: 0.12em; color: var(--accent-ink); }
+.device-dialog h2 { font-family: 'Syne', 'Archivo Black', sans-serif; font-weight: 800; font-size: 1.45rem; line-height: 1.15; margin: 0; }
+.device-dialog p { font-size: 0.98rem; line-height: 1.55; margin: 0; color: #222; }
+.device-dialog .dd-url { font-family: 'Space Mono', monospace; font-size: 0.85rem; border: 1px dashed #000; padding: 0.55rem 0.7rem; word-break: break-all; }
+.device-dialog .dd-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.3rem; }
+.device-dialog button, .device-dialog a.dd-btn { font-family: 'Space Mono', monospace; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; color: #000; border: 2px solid #000; padding: 0.7rem 0.9rem; cursor: pointer; text-decoration: none; }
+.device-dialog .dd-primary { background: #000 !important; color: #EDE6D6 !important; }
+
 /* Section: Call to Action */
 .section-cta {
     position: relative;
@@ -1174,7 +1187,7 @@ a, button, .module-card {
 
 <header class="site-header" id="top">
     <div class="beta-strip" role="note" aria-label="Beta version, live: an experimental work in progress.">
-        <div class="beta-track" aria-hidden="true"><span>● Beta version — live</span><span>● Experimental</span><span>● Work in progress</span><span>● Bugs may happen</span><span>● Feedback welcome</span><span>● Beta version — live</span><span>● Experimental</span><span>● Work in progress</span><span>● Bugs may happen</span><span>● Feedback welcome</span><span>● Beta version — live</span><span>● Experimental</span><span>● Work in progress</span><span>● Bugs may happen</span><span>● Feedback welcome</span><span>● Beta version — live</span><span>● Experimental</span><span>● Work in progress</span><span>● Bugs may happen</span><span>● Feedback welcome</span></div>
+        <div class="beta-track" aria-hidden="true"><span>● Beta version — live</span><span>● Experimental</span><span>● Desktop only</span><span>● Work in progress</span><span>● Bugs may happen</span><span>● Feedback welcome</span><span>● Beta version — live</span><span>● Experimental</span><span>● Desktop only</span><span>● Work in progress</span><span>● Bugs may happen</span><span>● Feedback welcome</span><span>● Beta version — live</span><span>● Experimental</span><span>● Desktop only</span><span>● Work in progress</span><span>● Bugs may happen</span><span>● Feedback welcome</span><span>● Beta version — live</span><span>● Experimental</span><span>● Desktop only</span><span>● Work in progress</span><span>● Bugs may happen</span><span>● Feedback welcome</span></div>
     </div>
     <nav class="topnav" aria-label="Main navigation">
         <a class="brand" href="#top" aria-label="Hors Champ — top of page"><svg width="26" height="26" viewBox="13 -13 200 200" aria-hidden="true"><g fill="none" stroke="#EDE6D6" stroke-width="16" stroke-linecap="square"><path d="M20 62 V20 H62"></path><path d="M180 138 V180 H138"></path><path d="M62 180 H20 V138"></path><path d="M138 20 H150"></path><path d="M180 50 V62"></path></g><circle cx="182" cy="18" r="32" fill="#FF5A1F"></circle></svg><span>HORS CHAMP</span></a>
@@ -1203,7 +1216,7 @@ a, button, .module-card {
         
         <div class="hero-meta">
             <div class="status">BETA VERSION — LIVE</div>
-            <div class="date">EXPERIMENTAL · NOVEMBER 2026</div>
+            <div class="date">EXPERIMENTAL · DESKTOP ONLY · NOV 2026</div>
             <a class="launch-btn" href="https://horschamp.ai.studio" target="_blank" rel="noopener">Launch Hors Champ ↗</a>
         </div>
     </div>
@@ -1519,7 +1532,7 @@ a, button, .module-card {
             <div class="step">
                 <span class="num">01</span>
                 <h3>Open the app</h3>
-                <p>On a computer, in Chrome or Edge (MIDI and voice commands).
+                <p><strong>Desktop only</strong>, in Chrome or Edge (MIDI and voice commands). The app is not made for phones.
                 Plug in your MIDI controller, then click “Detect inputs”.
                 Every module starts switched off: turn on the ones you want with their ON button.</p>
             </div>
@@ -2120,5 +2133,46 @@ a, button, .module-card {
 })();
 </script>
 
+<dialog class="device-dialog" id="device-dialog" aria-labelledby="dd-title">
+    <div class="dd-in">
+        <span class="dd-k">DESKTOP ONLY</span>
+        <h2 id="dd-title"></h2>
+        <p id="dd-text"></p>
+        <div class="dd-url">horschamp.ai.studio</div>
+        <div class="dd-actions">
+            <button type="button" class="dd-primary" id="dd-copy">Copy the link</button>
+            <a class="dd-btn" id="dd-anyway" href="https://horschamp.ai.studio" target="_blank" rel="noopener" hidden>Open anyway ↗</a>
+            <button type="button" id="dd-close">Close</button>
+        </div>
+    </div>
+</dialog>
+<script>
+(() => {
+    // Téléphone : écran tactile sans souris, petit côté < 600 px. Tablette : tactile, petit côté >= 600 px.
+    const touchOnly = matchMedia('(pointer: coarse)').matches && !matchMedia('(hover: hover)').matches;
+    if (!touchOnly) return;
+    const isPhone = Math.min(screen.width, screen.height) < 600;
+    const dlg = document.getElementById('device-dialog');
+    if (!dlg || typeof dlg.showModal !== 'function') return;
+    const T = {"phone_t": "Hors Champ is played on a computer", "phone_p": "The app is a performance instrument designed for a large screen, a keyboard and a mouse (or a MIDI controller). It does not work on phones. Open this link on a computer, in Chrome or Edge.", "tab_t": "Tablet: not tested yet", "tab_p": "Hors Champ is designed for desktop. On a tablet, the layout and sound may misbehave. For the best experience, open the link on a computer, in Chrome or Edge.", "copied": "Link copied ✓"};
+    document.getElementById('dd-title').textContent = isPhone ? T.phone_t : T.tab_t;
+    document.getElementById('dd-text').textContent = isPhone ? T.phone_p : T.tab_p;
+    if (!isPhone) document.getElementById('dd-anyway').hidden = false;
+    document.addEventListener('click', (e) => {
+        const a = e.target.closest('a[href^="https://horschamp.ai.studio"]');
+        if (!a || a.id === 'dd-anyway') return;
+        e.preventDefault();
+        dlg.showModal();
+    });
+    document.getElementById('dd-close').addEventListener('click', () => dlg.close());
+    document.getElementById('dd-anyway').addEventListener('click', () => dlg.close());
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+    const copyBtn = document.getElementById('dd-copy');
+    copyBtn.addEventListener('click', async () => {
+        try { await navigator.clipboard.writeText('https://horschamp.ai.studio'); copyBtn.textContent = T.copied; }
+        catch (_) { copyBtn.textContent = 'horschamp.ai.studio'; }
+    });
+})();
+</script>
 </body>
 </html>
