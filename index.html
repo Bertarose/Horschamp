@@ -605,6 +605,58 @@ body {
 .lang-switch a[aria-current="true"] { opacity: 1; border-bottom: 1px solid currentColor; }
 .lang-switch a:hover { opacity: 1; }
 
+/* Bandeau BETA */
+.beta-strip {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 5;
+    background: var(--accent);
+    color: #000;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.7rem 0;
+}
+.beta-track {
+    display: inline-flex;
+    animation: beta-scroll 40s linear infinite;
+}
+.beta-track span { padding-right: 2.5rem; }
+@keyframes beta-scroll { to { transform: translateX(-50%); } }
+.hero-content { padding-top: calc(3vw + 2.6rem); }
+
+.hero-meta .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    border: 2px solid var(--accent);
+    padding: 0.6rem 1rem;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: clamp(0.9rem, 1.4vw, 1.15rem);
+    letter-spacing: 0.12em;
+    background: rgba(0,0,0,0.45);
+}
+.hero-meta .status::before {
+    content: '';
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+    animation: blink 1.6s infinite;
+}
+.note strong { color: var(--accent); }
+.note a { color: var(--fg); }
+
+@media (prefers-reduced-motion: reduce) {
+    .beta-track { animation: none; }
+    .hero-meta .status::before { animation: none; }
+}
+
 /* Footer */
 .footer {
     background: var(--fg);
@@ -723,6 +775,9 @@ a, button, .module-card {
 
 <!-- Hero Section -->
 <section class="hero">
+    <div class="beta-strip" role="note" aria-label="Version bêta, en ligne : version expérimentale en développement actif.">
+        <div class="beta-track" aria-hidden="true"><span>● Version bêta — en ligne</span><span>● Version expérimentale</span><span>● En développement actif</span><span>● Des bogues sont possibles</span><span>● Vos retours sont bienvenus</span><span>● Version bêta — en ligne</span><span>● Version expérimentale</span><span>● En développement actif</span><span>● Des bogues sont possibles</span><span>● Vos retours sont bienvenus</span><span>● Version bêta — en ligne</span><span>● Version expérimentale</span><span>● En développement actif</span><span>● Des bogues sont possibles</span><span>● Vos retours sont bienvenus</span><span>● Version bêta — en ligne</span><span>● Version expérimentale</span><span>● En développement actif</span><span>● Des bogues sont possibles</span><span>● Vos retours sont bienvenus</span></div>
+    </div>
     <canvas class="hero-image" id="gradient-hero"></canvas>
     <div class="hero-overlay"></div>
     
@@ -748,8 +803,8 @@ a, button, .module-card {
         </div>
         
         <div class="hero-meta">
-            <div class="status">BÊTA PUBLIQUE · EN LIGNE</div>
-            <div class="date">NOVEMBRE 2026</div>
+            <div class="status">VERSION BÊTA — EN LIGNE</div>
+            <div class="date">EXPÉRIMENTAL · NOVEMBRE 2026</div>
             <a class="launch-btn" href="https://horschamp.ai.studio" target="_blank" rel="noopener">Lancer Hors Champ ↗</a>
         </div>
     </div>
@@ -796,7 +851,7 @@ a, button, .module-card {
             <span>Live Performance</span>
         </div>
 
-        <div class="status-line">Bêta publique en ligne · horschamp.ai.studio</div>
+        <div class="status-line">Version bêta expérimentale · horschamp.ai.studio</div>
     </div>
     
     <div class="concept-image">
@@ -839,9 +894,9 @@ a, button, .module-card {
         </div>
 
         <div class="note">
-            Ta clé reste enregistrée dans ton navigateur et sert uniquement à tes propres requêtes ;
+            <strong>VERSION BÊTA — EXPÉRIMENTALE.</strong> Ta clé reste enregistrée dans ton navigateur et sert uniquement à tes propres requêtes ;
             elle n'est jamais conservée sur le serveur. L'usage de l'IA compte sur ton propre
-            quota Gemini. Version bêta : des bogues sont possibles. Retours bienvenus.
+            quota Gemini. Des bogues sont possibles : écris-moi ce qui marche ou bloque à <a href="mailto:info@kimmaurice.com">info@kimmaurice.com</a>.
         </div>
     </div>
 </section>
