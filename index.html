@@ -453,6 +453,60 @@ body {
 }
 .module-card h3 { font-size: 0.85rem !important; font-family: 'Space Mono', monospace !important; letter-spacing: 0.12em; margin-bottom: 0.6rem !important; }
 
+/* Section: Dossier */
+.section-dossier { padding: 15vh 3vw; background: var(--bg); }
+.dossier-inner { max-width: 1400px; margin: 0 auto; }
+.section-dossier h2 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(3rem, 10vw, 12rem);
+    line-height: 0.9;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+}
+.dossier-intro { font-size: clamp(1rem, 1.8vw, 1.3rem); color: #555; max-width: 60ch; line-height: 1.6; margin-bottom: 4rem; }
+.dl-list { list-style: none; border-top: 2px solid #000; }
+.dl-row {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr) 6rem auto;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.4rem 0;
+    border-bottom: 1px solid #c9c2b3;
+}
+.dl-type {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    border: 1px solid #000;
+    padding: 0.3rem 0;
+    text-align: center;
+}
+.dl-txt { display: flex; flex-direction: column; gap: 0.3rem; }
+.dl-txt strong { font-family: 'Syne', 'Archivo Black', sans-serif; font-weight: 800; font-size: 1.15rem; }
+.dl-txt span { color: #555; font-size: 0.95rem; line-height: 1.5; }
+.dl-size { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: #555; text-align: right; }
+.dl-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #000;
+    text-decoration: none;
+    border: 2px solid #000;
+    padding: 0.8rem 1.1rem;
+    white-space: nowrap;
+    transition: background 0.3s, color 0.3s;
+}
+.dl-btn:hover { background: #000; color: #EDE6D6; }
+.dl-btn:focus-visible { outline: 2px solid #000; outline-offset: 3px; }
+.dossier-note { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: #555; margin-top: 2rem; line-height: 1.7; max-width: 80ch; }
+@media (max-width: 700px) {
+    .dl-row { grid-template-columns: 3.5rem minmax(0, 1fr); }
+    .dl-size { text-align: left; grid-column: 2; }
+    .dl-btn { grid-column: 1 / -1; text-align: center; }
+}
+
 /* Section: Call to Action */
 .section-cta {
     position: relative;
@@ -949,6 +1003,7 @@ a, button, .module-card {
                 <a href="#ecouter">Écouter</a>
                 <a href="#concept">Concept</a>
                 <a href="#modules">Modules</a>
+                <a href="#dossier">Dossier</a>
                 <a href="#contact">Contact</a>
             </div>
             <div class="nav-right">
@@ -1256,6 +1311,53 @@ a, button, .module-card {
                 </p>
             </div>
         </div>
+    </div>
+</section>
+
+<!-- Dossier Section -->
+<section class="section-dossier" id="dossier">
+    <div class="dossier-inner">
+        <h2>DOSSIER</h2>
+        <p class="dossier-intro">Environ 7 mois de développement, version 56. Tout est ici, à télécharger librement : pour les centres d’artistes, les festivals, les médias et les curieux.</p>
+        <ul class="dl-list">
+            <li class="dl-row">
+                <span class="dl-type">PDF</span>
+                <div class="dl-txt"><strong>Fiche de projet (français)</strong><span>Une page : démarche, fonctions, technologies, état du projet, contact.</span></div>
+                <span class="dl-size">510 Ko</span>
+                <a class="dl-btn" href="dossier/HORS-CHAMP_fiche-projet_fr.pdf" download aria-label="Télécharger : Fiche de projet (français)">Télécharger ↓</a>
+            </li>
+            <li class="dl-row">
+                <span class="dl-type">PDF</span>
+                <div class="dl-txt"><strong>Fiche de projet (anglais)</strong><span>La même fiche, version anglaise.</span></div>
+                <span class="dl-size">510 Ko</span>
+                <a class="dl-btn" href="dossier/HORS-CHAMP_fiche-projet_en.pdf" download aria-label="Télécharger : Fiche de projet (anglais)">Télécharger ↓</a>
+            </li>
+            <li class="dl-row">
+                <span class="dl-type">PDF</span>
+                <div class="dl-txt"><strong>Guide complet des fonctions</strong><span>14 pages : toutes les fonctions, démarrage express, carte MIDI, parcours d’utilisation, dépannage.</span></div>
+                <span class="dl-size">870 Ko</span>
+                <a class="dl-btn" href="guide/HORS-CHAMP_guide.pdf" download aria-label="Télécharger : Guide complet des fonctions">Télécharger ↓</a>
+            </li>
+            <li class="dl-row">
+                <span class="dl-type">ZIP</span>
+                <div class="dl-txt"><strong>Captures d’écran</strong><span>7 captures haute résolution : Hydra VJ, live code, Trace, Snapshots, Beat Lab…</span></div>
+                <span class="dl-size">2 Mo</span>
+                <a class="dl-btn" href="dossier/HORS-CHAMP_captures.zip" download aria-label="Télécharger : Captures d’écran">Télécharger ↓</a>
+            </li>
+            <li class="dl-row">
+                <span class="dl-type">ZIP</span>
+                <div class="dl-txt"><strong>Logo</strong><span>Symbole et logo complet, fonds sombre et clair, SVG et PNG.</span></div>
+                <span class="dl-size">110 Ko</span>
+                <a class="dl-btn" href="dossier/HORS-CHAMP_logo.zip" download aria-label="Télécharger : Logo">Télécharger ↓</a>
+            </li>
+            <li class="dl-row">
+                <span class="dl-type">MP3</span>
+                <div class="dl-txt"><strong>TRASH DJ SET</strong><span>Session enregistrée avec Hors Champ, 5 min 45.</span></div>
+                <span class="dl-size">8 Mo</span>
+                <a class="dl-btn" href="audio/trash-dj-set.mp3" download aria-label="Télécharger : TRASH DJ SET">Télécharger ↓</a>
+            </li>
+        </ul>
+        <p class="dossier-note">Images et logo utilisables pour la presse et les dossiers de programmation, avec la mention « Hors Champ — Kim Maurice ».</p>
     </div>
 </section>
 
