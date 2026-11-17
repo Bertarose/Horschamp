@@ -12,7 +12,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -116,11 +116,12 @@ body {
 }
 
 .hero-title h1 {
-    font-family: 'Archivo Black', sans-serif;
-    font-size: clamp(4rem, 18vw, 20rem);
-    line-height: 0.85;
+    font-family: 'Syne', 'Archivo Black', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3rem, 9vw, 9.5rem);
+    line-height: 0.9;
     color: white;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     text-transform: uppercase;
 }
 
@@ -651,6 +652,9 @@ body {
 }
 
 /* Responsive */
+@media (max-width: 600px) {
+    .hero-title { bottom: 26vh; }
+}
 @media (max-width: 968px) {
     .section-concept {
         grid-template-columns: 1fr;
@@ -737,7 +741,7 @@ a, button, .module-card {
         </nav>
         
         <div class="hero-title">
-            <h1>HORS<br>CHAMP</h1>
+            <h1>HORS CHAMP</h1>
             <div class="subtitle">
                 Conceptual sound machine · AI · Performance
             </div>
