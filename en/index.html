@@ -585,6 +585,23 @@ body {
 @media (max-width: 560px) { .shots { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { .shot img { transition: none; } }
 
+.guide-btn {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 1rem;
+    padding: 1.1rem 1.6rem;
+    border: 2px solid #000;
+    color: #000;
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: background 0.3s, color 0.3s;
+}
+.guide-btn:hover { background: #000; color: #EDE6D6; }
+@media (max-width: 600px) { .guide-btn { margin: 1rem 0 0; } }
+
 /* Section: Essayer */
 .section-essayer {
     padding: 15vh 3vw;
@@ -1171,6 +1188,7 @@ a, button, .module-card {
         </p>
 
         <a class="launch-btn dark" href="https://horschamp.ai.studio" target="_blank" rel="noopener">Open horschamp.ai.studio ↗</a>
+        <a class="guide-btn" href="../guide/HORS-CHAMP_guide.pdf" download>User guide (PDF, in French) ↓</a>
 
         <div class="steps">
             <div class="step">
@@ -1266,6 +1284,7 @@ a, button, .module-card {
             <div>© 2026 Kim Maurice · All rights reserved</div>
             <div class="footer-links">
                 <a href="https://horschamp.ai.studio" target="_blank" rel="noopener">App</a>
+                <a href="../guide/HORS-CHAMP_guide.pdf" download>Guide (PDF)</a>
                 <a href="mailto:info@kimmaurice.com">Email</a>
                 <a href="https://kimmaurice.com" target="_blank" rel="noopener">Portfolio</a>
             </div>
