@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<link rel="alternate" hreflang="en" href="en/">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>hors champ — machine sonore IA · bêta publique</title>
@@ -73,6 +74,8 @@ body {
 }
 
 .nav {
+    position: relative;
+    z-index: 4;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -596,6 +599,11 @@ body {
     justify-content: center;
 }
 
+.lang-switch { display: flex; gap: 0.8rem; justify-content: flex-end; margin-top: 0.5rem; }
+.lang-switch a { color: white; text-decoration: none; opacity: 0.5; }
+.lang-switch a[aria-current="true"] { opacity: 1; border-bottom: 1px solid currentColor; }
+.lang-switch a:hover { opacity: 1; }
+
 /* Footer */
 .footer {
     background: var(--fg);
@@ -694,6 +702,7 @@ body {
 .module-card:nth-child(6) { animation-delay: 0.6s; }
 .module-card:nth-child(7) { animation-delay: 0.7s; }
 .module-card:nth-child(8) { animation-delay: 0.8s; }
+.module-card:nth-child(9) { animation-delay: 0.9s; }
 
 /* Custom cursor effect */
 body {
@@ -723,6 +732,7 @@ a, button, .module-card {
             </div>
             <div class="nav-right">
                 Montréal, QC
+                <div class="lang-switch"><a href="./" aria-current="true" lang="fr">FR</a><a href="en/" lang="en">EN</a></div>
             </div>
         </nav>
         
@@ -806,8 +816,8 @@ a, button, .module-card {
             <div class="step">
                 <span class="num">01</span>
                 <h3>Ouvre l'app</h3>
-                <p>Sur ordinateur, idéalement dans Chrome. Les contrôleurs MIDI
-                se branchent directement et sont détectés automatiquement.</p>
+                <p>Sur ordinateur, dans Chrome ou Edge (MIDI et commandes vocales).
+                Branche ton contrôleur MIDI puis clique sur « Detect inputs ».</p>
             </div>
             <div class="step">
                 <span class="num">02</span>
@@ -893,19 +903,27 @@ a, button, .module-card {
         <div class="module-card">
             <h3>Cadre / Ambiance</h3>
             <p>
-                Contexte musical global : minimal, techno, dub, noise,
-                ambient, deep techno…
+                Contexte musical global : minimal techno, dub techno, acid techno,
+                krautrock, noise, néo-classique… ou « No drum / ambient only ».
             </p>
         </div>
         
         <div class="module-card">
-            <h3>Feeling / State</h3>
+            <h3>Texture sonore</h3>
             <p>
-                Modulateur émotionnel : tension, fragile, isolation,
-                confusion, calme…
+                Modulateur émotionnel : fragile, tension, isolation,
+                confusion, calme, menace, mélancolique, suspendu…
             </p>
         </div>
         
+        <div class="module-card">
+            <h3>Modes d'interprétation</h3>
+            <p>
+                Huit lentilles pour lire un concept : littéral, manifeste, biais,
+                pression, violence, safe space, dissociation, calme rituel.
+            </p>
+        </div>
+
         <div class="module-card">
             <h3>RAW / BRUT</h3>
             <p>
@@ -917,8 +935,8 @@ a, button, .module-card {
         <div class="module-card">
             <h3>Looper & Temps</h3>
             <p>
-                Synchronisation BPM, enregistrement cyclique,
-                superposition de couches génératives et live input.
+                Tempo, décompte, looper, superposition de couches
+                génératives et enregistrement du set.
             </p>
         </div>
         

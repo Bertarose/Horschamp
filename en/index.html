@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="alternate" hreflang="fr" href="../">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>hors champ — AI sound machine · public beta</title>
+<meta name="description" content="Hors Champ: an AI-driven sound and visual performance interface by Kim Maurice. Public beta online — try it in your browser.">
+<meta property="og:title" content="HORS CHAMP — AI sound machine">
+<meta property="og:description" content="Public beta online: horschamp.ai.studio">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='13 -13 200 200'%3E%3Crect x='13' y='-13' width='200' height='200' fill='%230E0E0E'/%3E%3Cg fill='none' stroke='%23C6F432' stroke-width='12' stroke-linecap='square'%3E%3Cpath d='M20 62 V20 H62'/%3E%3Cpath d='M180 138 V180 H138'/%3E%3Cpath d='M62 180 H20 V138'/%3E%3Cpath d='M138 20 H150'/%3E%3Cpath d='M180 50 V62'/%3E%3C/g%3E%3Ccircle cx='182' cy='18' r='30' fill='%23FF5A1F'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg: #ffffff;
+    --fg: #000000;
+    --accent: #ff0055;
+    --gray: #666666;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+}
+
+/* Hero Section */
+.hero {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.hero-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: #0a0a0a;
+    z-index: 1;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 100%);
+    z-index: 2;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 3;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3vw;
+}
+
+.nav {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    color: white;
+    font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.nav-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.nav-left a {
+    color: white;
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.nav-left a:hover {
+    opacity: 1;
+}
+
+.nav-right {
+    color: white;
+    opacity: 0.5;
+    font-weight: 300;
+}
+
+.hero-title {
+    position: absolute;
+    bottom: 15vh;
+    left: 3vw;
+    right: 3vw;
+}
+
+.hero-title h1 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(4rem, 18vw, 20rem);
+    line-height: 0.85;
+    color: white;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+}
+
+.hero-title .subtitle {
+    margin-top: 2rem;
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    color: white;
+    font-weight: 300;
+    max-width: 600px;
+}
+
+.hero-meta {
+    position: absolute;
+    bottom: 3vw;
+    right: 3vw;
+    text-align: right;
+    color: white;
+    font-size: clamp(0.8rem, 1.2vw, 1rem);
+}
+
+.hero-meta .status {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+}
+
+.hero-meta .date {
+    opacity: 0.6;
+    font-weight: 300;
+}
+
+/* Section: Concept */
+.section-concept {
+    position: relative;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+}
+
+.concept-text {
+    padding: 8vw;
+    position: relative;
+    z-index: 2;
+}
+
+.concept-text h2 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(3rem, 8vw, 10rem);
+    line-height: 0.9;
+    margin-bottom: 3rem;
+    text-transform: uppercase;
+}
+
+.concept-text p {
+    font-size: clamp(1rem, 1.8vw, 1.3rem);
+    line-height: 1.6;
+    color: var(--gray);
+    margin-bottom: 1.5rem;
+    max-width: 40ch;
+}
+
+.concept-text .highlight {
+    color: var(--fg);
+    font-weight: 500;
+}
+
+.stack-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 2.5rem 0 2rem;
+    max-width: 44ch;
+}
+
+.stack-tags span {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid #ddd;
+    color: var(--fg);
+    white-space: nowrap;
+}
+
+.status-line {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gray);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.status-line::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+    animation: blink 1.6s infinite;
+    flex-shrink: 0;
+}
+
+.concept-image {
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    background: #0a0a0a;
+    overflow: hidden;
+}
+
+.concept-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top left;
+    filter: grayscale(1) contrast(1.1) brightness(0.85);
+    transform: scale(1.02);
+    transition: filter 0.8s ease, transform 1.2s ease;
+}
+
+.concept-image:hover img {
+    filter: grayscale(0) contrast(1.02) brightness(1);
+    transform: scale(1);
+}
+
+/* trame de lignes façon écran cathodique, pour rappeler la "trace DOS" */
+.concept-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.15) 0px,
+        rgba(0,0,0,0.15) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+    pointer-events: none;
+    z-index: 2;
+    mix-blend-mode: multiply;
+}
+
+.concept-image .caption {
+    position: absolute;
+    left: 2rem;
+    bottom: 2rem;
+    z-index: 3;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: #fff;
+    text-transform: uppercase;
+    opacity: 0.75;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.concept-image .caption::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: inline-block;
+    animation: blink 1.6s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+}
+
+/* Section: En cours */
+.section-encours {
+    background: var(--fg);
+    color: var(--bg);
+    padding: 15vh 3vw;
+    position: relative;
+    overflow: hidden;
+}
+
+.encours-text {
+    position: relative;
+    z-index: 2;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.encours-text h2 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(2.5rem, 12vw, 15rem);
+    line-height: 0.85;
+    margin-bottom: 4rem;
+    text-transform: uppercase;
+}
+
+.encours-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 4rem;
+    margin-top: 5rem;
+}
+
+.encours-item h3 {
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.encours-item p {
+    color: #999;
+    line-height: 1.7;
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+}
+
+/* Section: Modules */
+.section-modules {
+    padding: 15vh 3vw;
+}
+
+.modules-header {
+    margin-bottom: 8vh;
+}
+
+.modules-header h2 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(3rem, 10vw, 12rem);
+    line-height: 0.9;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+}
+
+.modules-header p {
+    font-size: clamp(1rem, 1.8vw, 1.3rem);
+    color: var(--gray);
+    max-width: 60ch;
+}
+
+.modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2px;
+    background: var(--fg);
+}
+
+.module-card {
+    background: var(--bg);
+    padding: 3rem 2rem;
+    position: relative;
+    transition: all 0.4s ease;
+    cursor: pointer;
+}
+
+.module-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.4s ease;
+    z-index: 1;
+}
+
+.module-card:hover::before {
+    width: 100%;
+}
+
+.module-card:hover {
+    color: white;
+}
+
+.module-card:hover h3,
+.module-card:hover p {
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+.module-card h3 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    transition: color 0.4s ease;
+}
+
+.module-card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--gray);
+    transition: color 0.4s ease;
+}
+
+/* Section: Call to Action */
+.section-cta {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0a0a0a;
+    color: white;
+    overflow: hidden;
+}
+
+.cta-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: #0a0a0a;
+}
+
+.cta-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 3vw;
+}
+
+.cta-content h2 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(3rem, 15vw, 18rem);
+    line-height: 0.85;
+    margin-bottom: 3rem;
+    text-transform: uppercase;
+}
+
+.cta-content p {
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    margin-bottom: 4rem;
+    font-weight: 300;
+    max-width: 50ch;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.8;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 1.5rem 4rem;
+    border: 2px solid white;
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transition: left 0.4s ease;
+    z-index: -1;
+}
+
+.cta-button:hover {
+    color: var(--fg);
+}
+
+.cta-button:hover::before {
+    left: 0;
+}
+
+/* Bouton lancer l'app */
+.launch-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: var(--accent);
+    color: white;
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 1.1rem 2rem;
+    border: 2px solid var(--accent);
+    transition: background 0.3s, color 0.3s;
+}
+.launch-btn:hover { background: white; color: #000; border-color: white; }
+.launch-btn.dark:hover { background: #000; color: white; border-color: #000; }
+
+.nav-left a.nav-app { opacity: 1; color: var(--accent); font-weight: 500; }
+
+.hero-meta a { color: inherit; text-decoration: none; }
+.hero-meta .launch-btn { margin-top: 1.5rem; }
+
+/* Section: Essayer */
+.section-essayer {
+    padding: 15vh 3vw;
+    background: #f4f4f4;
+}
+.essayer-inner { max-width: 1400px; margin: 0 auto; }
+.essayer-inner h2 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(3rem, 10vw, 12rem);
+    line-height: 0.9;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+}
+.essayer-inner > p {
+    font-size: clamp(1rem, 1.8vw, 1.3rem);
+    color: #555;
+    max-width: 60ch;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+}
+.steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2px;
+    background: var(--fg);
+    margin: 4rem 0;
+    counter-reset: step;
+}
+.step {
+    background: #f4f4f4;
+    padding: 2.5rem 2rem;
+}
+.step .num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 1rem;
+}
+.step h3 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+}
+.step p { color: #555; line-height: 1.6; font-size: 0.95rem; }
+.step a { color: var(--fg); }
+.note {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: #555;
+    line-height: 1.8;
+    max-width: 80ch;
+    margin-top: 2rem;
+}
+
+.cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.lang-switch { display: flex; gap: 0.8rem; justify-content: flex-end; margin-top: 0.5rem; }
+.lang-switch a { color: white; text-decoration: none; opacity: 0.5; }
+.lang-switch a[aria-current="true"] { opacity: 1; border-bottom: 1px solid currentColor; }
+.lang-switch a:hover { opacity: 1; }
+
+/* Footer */
+.footer {
+    background: var(--fg);
+    color: var(--bg);
+    padding: 8vh 3vw;
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.footer-title {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(2rem, 6vw, 6rem);
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+}
+
+.footer-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    font-size: 0.9rem;
+    opacity: 0.6;
+}
+
+.footer-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.footer-links a:hover {
+    opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .section-concept {
+        grid-template-columns: 1fr;
+    }
+    
+    .concept-image {
+        height: 50vh;
+        position: relative;
+    }
+    
+    .encours-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-info {
+        flex-direction: column;
+        gap: 2rem;
+        text-align: center;
+    }
+}
+
+/* Scroll animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.concept-text,
+.modules-header,
+.encours-text {
+    animation: fadeInUp 1s ease-out both;
+}
+
+.module-card {
+    animation: fadeInUp 0.8s ease-out both;
+}
+
+.module-card:nth-child(1) { animation-delay: 0.1s; }
+.module-card:nth-child(2) { animation-delay: 0.2s; }
+.module-card:nth-child(3) { animation-delay: 0.3s; }
+.module-card:nth-child(4) { animation-delay: 0.4s; }
+.module-card:nth-child(5) { animation-delay: 0.5s; }
+.module-card:nth-child(6) { animation-delay: 0.6s; }
+.module-card:nth-child(7) { animation-delay: 0.7s; }
+.module-card:nth-child(8) { animation-delay: 0.8s; }
+.module-card:nth-child(9) { animation-delay: 0.9s; }
+
+/* Custom cursor effect */
+body {
+    cursor: crosshair;
+}
+
+a, button, .module-card {
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Hero Section -->
+<section class="hero">
+    <canvas class="hero-image" id="gradient-hero"></canvas>
+    <div class="hero-overlay"></div>
+    
+    <div class="hero-content">
+        <nav class="nav">
+            <div class="nav-left">
+                <a href="#essayer" class="nav-app">Try the app ↗</a>
+                <a href="#concept">Concept</a>
+                <a href="#modules">Modules</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="nav-right">
+                Montreal, QC
+                <div class="lang-switch"><a href="../" lang="fr">FR</a><a href="./" aria-current="true" lang="en">EN</a></div>
+            </div>
+        </nav>
+        
+        <div class="hero-title">
+            <h1>HORS<br>CHAMP</h1>
+            <div class="subtitle">
+                Conceptual sound machine · AI · Performance
+            </div>
+        </div>
+        
+        <div class="hero-meta">
+            <div class="status">PUBLIC BETA · ONLINE</div>
+            <div class="date">NOVEMBER 2026</div>
+            <a class="launch-btn" href="https://horschamp.ai.studio" target="_blank" rel="noopener">Launch Hors Champ ↗</a>
+        </div>
+    </div>
+</section>
+
+<!-- Concept Section -->
+<section class="section-concept" id="concept">
+    <div class="concept-text">
+        <h2>A MACHINE OUT OF FRAME</h2>
+        
+        <p>
+            <span class="highlight">hors champ</span> is an experimental sound interface
+            that turns concepts, words and perceptual states into musical matter.
+        </p>
+        
+        <p>
+            Neither a traditional DAW nor a simple generator, the app acts as a
+            <span class="highlight">conceptual interpretation machine</span> where
+            every module becomes a gesture and every word becomes a texture.
+        </p>
+        
+        <p>
+            Move between concept banks, shape intensities,
+            switch cognitive modes and watch the prompt being built in real time
+            through a <span class="highlight">DOS-style trace</span>.
+        </p>
+
+        <p>
+            The app brings together <span class="highlight">AI sound generation</span>,
+            virtual synthesizers, drum machines, a looper, voice commands
+            and MIDI controllers in a single performance environment. Designed for
+            musicians and sonic explorers, it favours a fluid experience
+            where the technology steps aside for creativity.
+        </p>
+
+        <div class="stack-tags">
+            <span>Google Lyria RealTime</span>
+            <span>Web Audio API</span>
+            <span>MIDI</span>
+            <span>WebSockets</span>
+            <span>Gemini</span>
+            <span>Hydra</span>
+            <span>TypeScript · Lit</span>
+            <span>Live Performance</span>
+        </div>
+
+        <div class="status-line">Public beta online · horschamp.ai.studio</div>
+    </div>
+    
+    <div class="concept-image">
+        <img src="../horschamp-app.webp" alt="Hors Champ interface — sound generation console" loading="lazy">
+        <div class="caption">live interface · beat lab &amp; fx rack</div>
+    </div>
+</section>
+
+<!-- Essayer Section -->
+<section class="section-essayer" id="essayer">
+    <div class="essayer-inner">
+        <h2>TRY IT</h2>
+        <p>
+            Hors Champ runs right in your browser. Nothing to install:
+            open the app, plug in your headphones and play.
+        </p>
+
+        <a class="launch-btn dark" href="https://horschamp.ai.studio" target="_blank" rel="noopener">Open horschamp.ai.studio ↗</a>
+
+        <div class="steps">
+            <div class="step">
+                <span class="num">01</span>
+                <h3>Open the app</h3>
+                <p>On a computer, in Chrome or Edge (MIDI and voice commands).
+                Plug in your MIDI controller, then click “Detect inputs”.</p>
+            </div>
+            <div class="step">
+                <span class="num">02</span>
+                <h3>Your Gemini key</h3>
+                <p>For AI sound generation, create a free key at
+                <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>
+                and paste it into the welcome window.</p>
+            </div>
+            <div class="step">
+                <span class="num">03</span>
+                <h3>Or without AI</h3>
+                <p>Choose “Continue without AI”: drum machine, synths,
+                effects rack and visuals all work in local mode.</p>
+            </div>
+        </div>
+
+        <div class="note">
+            Your key stays stored in your browser and is only used for your own requests;
+            it is never kept on the server. AI usage counts against your own
+            Gemini quota. Beta version: bugs may happen. Feedback welcome.
+        </div>
+    </div>
+</section>
+
+<!-- En cours Section -->
+<section class="section-encours">
+    <div class="encours-text">
+        <h2>WORK IN<br>PROGRESS</h2>
+        
+        <p style="color: #999; font-size: clamp(1rem, 1.8vw, 1.3rem); line-height: 1.6; max-width: 60ch;">
+            A first public version is now online and development continues.
+            I am looking for an artist-run centre or research space where I could
+            deepen and present this work.
+        </p>
+        
+        <div class="encours-grid">
+            <div class="encours-item">
+                <h3>Research & Development</h3>
+                <p>
+                    Exploring generative systems, language-to-sound translation
+                    and conceptual interfaces for live performance.
+                </p>
+            </div>
+            
+            <div class="encours-item">
+                <h3>Seeking a residency</h3>
+                <p>
+                    A space to develop the interface, create visual content
+                    and present the work in a research-creation context.
+                </p>
+            </div>
+            
+            <div class="encours-item">
+                <h3>Performance & Présentation</h3>
+                <p>
+                    Developing a distinct performance approach that explores
+                    the machine as interpreter and co-creator.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modules Section -->
+<section class="section-modules" id="modules">
+    <div class="modules-header">
+        <h2>MODULES</h2>
+        <p>
+            Each module is one dimension of the conceptual interface,
+            letting you sculpt sound through language and perceptual states.
+        </p>
+    </div>
+    
+    <div class="modules-grid">
+        <div class="module-card">
+            <h3>Concepts</h3>
+            <p>
+                Cells holding concepts (identity, silence, erasure…)
+                or free words that directly shape the sound generation.
+            </p>
+        </div>
+        
+        <div class="module-card">
+            <h3>Frame / Ambiance</h3>
+            <p>
+                Overall musical context: minimal techno, dub techno, acid techno,
+                krautrock, noise, neo-classical… or “No drum / ambient only”.
+            </p>
+        </div>
+        
+        <div class="module-card">
+            <h3>Sonic Texture</h3>
+            <p>
+                Emotional modulator: fragile, tension, isolation,
+                confusion, calm, threat, melancholic, suspended…
+            </p>
+        </div>
+        
+        <div class="module-card">
+            <h3>Interpretation Modes</h3>
+            <p>
+                Eight lenses for reading a concept: literal, manifesto, bias,
+                pressure, violence, safe space, dissociation, ritual calm.
+            </p>
+        </div>
+
+        <div class="module-card">
+            <h3>RAW</h3>
+            <p>
+                Strips away stylistic colouring to reveal a drier,
+                more abstract or unstable version of the preset.
+            </p>
+        </div>
+        
+        <div class="module-card">
+            <h3>Looper & Time</h3>
+            <p>
+                Tempo, count-in, looper, layering of generative parts
+                and recording your set.
+            </p>
+        </div>
+        
+        <div class="module-card">
+            <h3>Beat Lab</h3>
+            <p>
+                16/32-step sequencer, drum kits, pads and breaks,
+                and a chained effects rack ending in a tape machine.
+            </p>
+        </div>
+
+        <div class="module-card">
+            <h3>Hydra Visuals</h3>
+            <p>
+                Sound-reactive generative visuals that can be sent
+                to a second screen during a performance.
+            </p>
+        </div>
+
+        <div class="module-card">
+            <h3>Trace / Narration</h3>
+            <p>
+                The prompt and sound decisions shown
+                as a retro-computing log.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section-cta" id="contact">
+    <canvas class="cta-bg" id="gradient-cta"></canvas>
+    <div class="cta-content">
+        <h2>INTERESTED?</h2>
+        <p>
+            Artist-run centres, research spaces, collaborators:
+            let's talk about this experimental project.
+        </p>
+        <div class="cta-actions">
+            <a href="mailto:info@kimmaurice.com" class="cta-button">Get in touch</a>
+            <a href="https://horschamp.ai.studio" target="_blank" rel="noopener" class="cta-button">Try the app ↗</a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-title">HORS CHAMP</div>
+        <div class="footer-info">
+            <div>© 2026 Kim Maurice · All rights reserved</div>
+            <div class="footer-links">
+                <a href="https://horschamp.ai.studio" target="_blank" rel="noopener">App</a>
+                <a href="mailto:info@kimmaurice.com">Email</a>
+                <a href="https://kimmaurice.com" target="_blank" rel="noopener">Portfolio</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+/* ============================================================
+   hors champ — moniteur analogique
+   La capture d'écran de l'app est utilisée comme texture WebGL,
+   traitée avec un effet vidéo analogique : scanlines, aberration
+   chromatique, grain, bandes de glitch et roulement de tracking —
+   comme un signal capté, jamais tout à fait net. « Hors champ ».
+   ============================================================ */
+(function () {
+    const VERT_SRC = `
+        attribute vec2 aPosition;
+        void main() {
+            gl_Position = vec4(aPosition, 0.0, 1.0);
+        }
+    `;
+
+    const FRAG_SRC = `
+        precision highp float;
+        uniform vec2 uResolution;
+        uniform vec2 uImageResolution;
+        uniform sampler2D uImage;
+        uniform float uTime;
+        uniform float uSeed;
+        uniform vec3 uTint;
+
+        float hash(float n) {
+            return fract(sin(n) * 43758.5453123);
+        }
+
+        float hash2(vec2 p) {
+            p = fract(p * vec2(123.34, 456.21));
+            p += dot(p, p + 45.32);
+            return fract(p.x * p.y);
+        }
+
+        void main() {
+            vec2 uv = gl_FragCoord.xy / uResolution.xy;
+            uv.y = 1.0 - uv.y;
+
+            /* cover-fit de l'image dans le canvas */
+            float canvasAspect = uResolution.x / uResolution.y;
+            float imageAspect = uImageResolution.x / uImageResolution.y;
+            vec2 st = uv;
+            if (canvasAspect > imageAspect) {
+                float scale = canvasAspect / imageAspect;
+                st.y = (st.y - 0.5) / scale + 0.5;
+            } else {
+                float scale = imageAspect / canvasAspect;
+                st.x = (st.x - 0.5) / scale + 0.5;
+            }
+
+            float t = uTime + uSeed;
+
+            /* bandes de glitch horizontal, occasionnelles */
+            float band = floor(st.y * 40.0);
+            float bandSeed = hash(band + floor(t * 1.3) + uSeed);
+            float glitchActive = step(0.93, bandSeed);
+            float glitchShift = (hash(band * 3.1 + floor(t * 6.0)) - 0.5) * 0.06 * glitchActive;
+            st.x += glitchShift;
+
+            /* micro-jitter constant, façon bande magnétique instable */
+            st.x += (hash(floor(st.y * 400.0) + floor(t * 24.0)) - 0.5) * 0.0015;
+
+            /* aberration chromatique, pulsée légèrement dans le temps */
+            float aberr = 0.0025 + 0.0018 * sin(t * 0.6);
+            vec2 dir = normalize(st - 0.5 + 0.0001);
+            float r = texture2D(uImage, clamp(st + dir * aberr, 0.0, 1.0)).r;
+            float g = texture2D(uImage, st).g;
+            float b = texture2D(uImage, clamp(st - dir * aberr, 0.0, 1.0)).b;
+            vec3 color = vec3(r, g, b);
+
+            /* scanlines fixes + roulement lent façon tube cathodique */
+            float scan = sin((uv.y * uResolution.y) * 1.0) * 0.035;
+            color -= scan;
+
+            float rollPos = fract(uv.y - t * 0.06);
+            float rollBand = smoothstep(0.02, 0.0, abs(rollPos - 0.5)) * 0.12;
+            color += rollBand;
+
+            /* grain */
+            float grain = (hash2(gl_FragCoord.xy + t * 90.0) - 0.5) * 0.05;
+            color += grain;
+
+            /* teinte d'ensemble + désaturation partielle pour rester en famille avec le site */
+            float lum = dot(color, vec3(0.299, 0.587, 0.114));
+            color = mix(color, vec3(lum), 0.35);
+            color = mix(color, color * uTint, 0.18);
+
+            /* assombrissement + vignette pour laisser le texte respirer */
+            float vig = smoothstep(1.2, 0.2, distance(uv, vec2(0.5, 0.55)));
+            color *= mix(0.45, 0.72, vig);
+
+            gl_FragColor = vec4(clamp(color, 0.0, 1.0), 1.0);
+        }
+    `;
+
+    function compileShader(gl, type, src) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, src);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            console.warn('Analog shader: compile error', gl.getShaderInfoLog(shader));
+            gl.deleteShader(shader);
+            return null;
+        }
+        return shader;
+    }
+
+    function initAnalogShader(canvas, image, opts) {
+        const gl = canvas.getContext('webgl', { antialias: true, alpha: false }) ||
+                    canvas.getContext('experimental-webgl');
+        if (!gl) return null; // le fond CSS de secours reste visible
+
+        const vertShader = compileShader(gl, gl.VERTEX_SHADER, VERT_SRC);
+        const fragShader = compileShader(gl, gl.FRAGMENT_SHADER, FRAG_SRC);
+        if (!vertShader || !fragShader) return null;
+
+        const program = gl.createProgram();
+        gl.attachShader(program, vertShader);
+        gl.attachShader(program, fragShader);
+        gl.linkProgram(program);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+            console.warn('Analog shader: link error', gl.getProgramInfoLog(program));
+            return null;
+        }
+        gl.useProgram(program);
+
+        const buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+            -1, -1,  1, -1,  -1, 1,
+            -1, 1,   1, -1,   1, 1
+        ]), gl.STATIC_DRAW);
+
+        const aPosition = gl.getAttribLocation(program, 'aPosition');
+        gl.enableVertexAttribArray(aPosition);
+        gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
+
+        const texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+        const uniforms = {
+            uResolution: gl.getUniformLocation(program, 'uResolution'),
+            uImageResolution: gl.getUniformLocation(program, 'uImageResolution'),
+            uImage: gl.getUniformLocation(program, 'uImage'),
+            uTime: gl.getUniformLocation(program, 'uTime'),
+            uSeed: gl.getUniformLocation(program, 'uSeed'),
+            uTint: gl.getUniformLocation(program, 'uTint')
+        };
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function resize() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const w = canvas.clientWidth * dpr;
+            const h = canvas.clientHeight * dpr;
+            if (canvas.width !== w || canvas.height !== h) {
+                canvas.width = w;
+                canvas.height = h;
+                gl.viewport(0, 0, w, h);
+            }
+        }
+
+        let visible = true;
+        if ('IntersectionObserver' in window) {
+            new IntersectionObserver((entries) => {
+                visible = entries[0].isIntersecting;
+            }, { threshold: 0.01 }).observe(canvas);
+        }
+
+        let start = performance.now();
+        let raf = null;
+
+        function frame(now) {
+            raf = requestAnimationFrame(frame);
+            if (!visible) return;
+
+            resize();
+
+            const elapsed = prefersReducedMotion ? 0 : (now - start) / 1000 * opts.speed;
+
+            gl.useProgram(program);
+            gl.uniform2f(uniforms.uResolution, canvas.width, canvas.height);
+            gl.uniform2f(uniforms.uImageResolution, image.naturalWidth, image.naturalHeight);
+            gl.uniform1f(uniforms.uTime, elapsed);
+            gl.uniform1f(uniforms.uSeed, opts.seed);
+            gl.uniform3f(uniforms.uTint, opts.tint[0], opts.tint[1], opts.tint[2]);
+
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.uniform1i(uniforms.uImage, 0);
+
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+        }
+
+        raf = requestAnimationFrame(frame);
+        return { stop: () => cancelAnimationFrame(raf) };
+    }
+
+    function loadImage(src) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = reject;
+            img.src = src;
+        });
+    }
+
+    function boot() {
+        const heroCanvas = document.getElementById('gradient-hero');
+        const ctaCanvas = document.getElementById('gradient-cta');
+        if (!heroCanvas && !ctaCanvas) return;
+
+        loadImage('../horschamp-app.webp').then((img) => {
+            if (heroCanvas) {
+                initAnalogShader(heroCanvas, img, {
+                    speed: 1.0,
+                    seed: 0.0,
+                    tint: [1.0, 0.35, 0.55] /* teinte accent, subtile */
+                });
+            }
+            if (ctaCanvas) {
+                initAnalogShader(ctaCanvas, img, {
+                    speed: 0.85,
+                    seed: 12.4,
+                    tint: [1.0, 0.35, 0.55]
+                });
+            }
+        }).catch(() => {
+            /* l'image n'a pas pu charger — le fond #0a0a0a en CSS reste visible */
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+    } else {
+        boot();
+    }
+})();
+</script>
+
+</body>
+</html>
