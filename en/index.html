@@ -888,6 +888,99 @@ body {
 .betta.is-resting { pointer-events: auto; }
 .betta-close:focus-visible { outline: 2px solid #EDE6D6; outline-offset: 2px; }
 
+/* En-tête collant : bandeau bêta + navigation */
+.site-header { position: sticky; top: 0; z-index: 40; }
+.beta-strip { position: relative; top: auto; left: auto; right: auto; }
+.topnav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0 3vw;
+    height: 3.75rem;
+    background: rgba(14, 14, 14, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid #2a2a2a;
+    color: #EDE6D6;
+}
+.brand { display: inline-flex; align-items: center; gap: 0.6rem; color: #EDE6D6; text-decoration: none; flex-shrink: 0; }
+.brand span { font-family: 'Syne', 'Archivo Black', sans-serif; font-weight: 800; font-size: 1rem; letter-spacing: 0.06em; white-space: nowrap; }
+.nav-links { display: flex; align-items: center; gap: 0.25rem; margin: 0 auto; }
+.nav-links a {
+    color: #b5b0a5;
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.55rem 0.8rem;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s;
+}
+.nav-links a:hover { color: #EDE6D6; }
+.nav-links a.is-active { color: #EDE6D6; border-bottom-color: var(--accent); }
+.nav-end { display: flex; align-items: center; gap: 1.2rem; flex-shrink: 0; }
+.nav-end .lang-switch { margin: 0; gap: 0.6rem; font-family: 'Space Mono', monospace; font-size: 0.78rem; letter-spacing: 0.1em; }
+.nav-cta {
+    background: #EDE6D6;
+    color: #000;
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.6rem 1rem;
+    border: 2px solid #EDE6D6;
+    white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+}
+.nav-cta:hover { background: transparent; color: #EDE6D6; }
+.topnav a:focus-visible, .menu-btn:focus-visible { outline: 2px solid #EDE6D6; outline-offset: 2px; }
+.menu-btn {
+    display: none;
+    margin-left: auto;
+    background: transparent;
+    border: 1px solid #EDE6D6;
+    color: #EDE6D6;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.5rem 0.9rem;
+    cursor: pointer;
+}
+.hero { height: calc(100svh - var(--header-h, 6.1rem)); min-height: 520px; }
+.hero-content { padding-top: 3vw; }
+section[id] { scroll-margin-top: var(--header-h, 6.1rem); }
+@media (max-width: 1080px) {
+    .menu-btn { display: inline-block; }
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        margin: 0;
+        background: #0E0E0E;
+        border-bottom: 1px solid #2a2a2a;
+        padding: 0.5rem 3vw 1rem;
+    }
+    .nav-links.is-open { display: flex; }
+    .nav-links a { font-size: 1rem; padding: 0.9rem 0; border-bottom: 1px solid #222; }
+    .nav-links a.is-active { border-bottom-color: #222; color: var(--accent); }
+    .topnav { position: relative; }
+}
+@media (max-width: 560px) {
+    .brand span { display: none; }
+    .nav-cta { padding: 0.55rem 0.7rem; font-size: 0.7rem; }
+    .nav-end { gap: 0.8rem; }
+}
+
 /* Footer */
 .footer {
     background: var(--fg);
@@ -1032,29 +1125,27 @@ a, button, .module-card {
     <button type="button" class="betta-close" aria-label="Close the fish">×</button>
 </div>
 
-<!-- Hero Section -->
-<section class="hero">
+<header class="site-header" id="top">
     <div class="beta-strip" role="note" aria-label="Beta version, live: an experimental work in progress.">
         <div class="beta-track" aria-hidden="true"><span>● Beta version — live</span><span>● Experimental</span><span>● Work in progress</span><span>● Bugs may happen</span><span>● Feedback welcome</span><span>● Beta version — live</span><span>● Experimental</span><span>● Work in progress</span><span>● Bugs may happen</span><span>● Feedback welcome</span><span>● Beta version — live</span><span>● Experimental</span><span>● Work in progress</span><span>● Bugs may happen</span><span>● Feedback welcome</span><span>● Beta version — live</span><span>● Experimental</span><span>● Work in progress</span><span>● Bugs may happen</span><span>● Feedback welcome</span></div>
     </div>
+    <nav class="topnav" aria-label="Main navigation">
+        <a class="brand" href="#top" aria-label="Hors Champ — top of page"><svg width="26" height="26" viewBox="13 -13 200 200" aria-hidden="true"><g fill="none" stroke="#EDE6D6" stroke-width="16" stroke-linecap="square"><path d="M20 62 V20 H62"></path><path d="M180 138 V180 H138"></path><path d="M62 180 H20 V138"></path><path d="M138 20 H150"></path><path d="M180 50 V62"></path></g><circle cx="182" cy="18" r="32" fill="#FF5A1F"></circle></svg><span>HORS CHAMP</span></a>
+        <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav-links" data-open="Menu" data-close="Close">Menu</button>
+        <div class="nav-links" id="nav-links"><a href="#ecouter" data-nav>Listen</a><a href="#concept" data-nav>Concept</a><a href="#modules" data-nav>Modules</a><a href="#essayer" data-nav>Try it</a><a href="#dossier" data-nav>Press kit</a><a href="#contact" data-nav>Contact</a></div>
+        <div class="nav-end">
+            <div class="lang-switch"><a href="../" lang="fr">FR</a><a href="./" aria-current="true" lang="en">EN</a></div>
+            <a class="nav-cta" href="https://horschamp.ai.studio" target="_blank" rel="noopener">Try the app ↗</a>
+        </div>
+    </nav>
+</header>
+
+<!-- Hero Section -->
+<section class="hero">
     <canvas class="hero-image" id="gradient-hero"></canvas>
     <div class="hero-overlay"></div>
     
     <div class="hero-content">
-        <nav class="nav">
-            <div class="nav-left">
-                <a href="https://horschamp.ai.studio" target="_blank" rel="noopener" class="nav-app">Try the app ↗</a>
-                <a href="#ecouter">Listen</a>
-                <a href="#concept">Concept</a>
-                <a href="#modules">Modules</a>
-                <a href="#dossier">Press kit</a>
-                <a href="#contact">Contact</a>
-            </div>
-            <div class="nav-right">
-                Montreal, QC
-                <div class="lang-switch"><a href="../" lang="fr">FR</a><a href="./" aria-current="true" lang="en">EN</a></div>
-            </div>
-        </nav>
         
         <div class="hero-title">
             <h1>HORS CHAMP</h1>
@@ -1792,6 +1883,39 @@ a, button, .module-card {
     el.style.transform = 'translate(' + (window.innerWidth + 40) + 'px,0)';
     el.hidden = false;
     if (reduce) { rest(false); } else { setTimeout(function () { pass(0); }, 1200); }
+})();
+</script>
+
+<script>
+/* Navigation : menu mobile et section active */
+(function () {
+    var header = document.querySelector('.site-header');
+    function setH() { document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px'); }
+    setH(); window.addEventListener('resize', setH);
+    var btn = document.querySelector('.menu-btn');
+    var box = document.getElementById('nav-links');
+    var links = Array.prototype.slice.call(document.querySelectorAll('[data-nav]'));
+    function setOpen(open) {
+        box.classList.toggle('is-open', open);
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        btn.textContent = open ? btn.dataset.close : btn.dataset.open;
+    }
+    btn.addEventListener('click', function () { setOpen(!box.classList.contains('is-open')); });
+    links.forEach(function (a) { a.addEventListener('click', function () { setOpen(false); }); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && box.classList.contains('is-open')) { setOpen(false); btn.focus(); } });
+    if (!('IntersectionObserver' in window)) return;
+    var map = {};
+    links.forEach(function (a) { var t = document.querySelector(a.getAttribute('href')); if (t) map[t.id] = a; });
+    var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+            if (en.isIntersecting && map[en.target.id]) {
+                links.forEach(function (a) { a.classList.remove('is-active'); a.removeAttribute('aria-current'); });
+                map[en.target.id].classList.add('is-active');
+                map[en.target.id].setAttribute('aria-current', 'true');
+            }
+        });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    Object.keys(map).forEach(function (id) { io.observe(document.getElementById(id)); });
 })();
 </script>
 
