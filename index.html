@@ -395,6 +395,28 @@ body {
     .eco-cols { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
 }
 
+
+/* Lightbox : agrandir les captures sur la page */
+.lb { position: fixed; inset: 0; z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 4vh 4vw;
+      background: rgba(10,10,10,0.92); opacity: 0; visibility: hidden; transition: opacity 0.35s ease, visibility 0s linear 0.35s; }
+.lb.is-open { opacity: 1; visibility: visible; transition: opacity 0.35s ease, visibility 0s; }
+.lb figure { margin: 0; max-width: 100%; max-height: 100%; display: flex; flex-direction: column; align-items: center; gap: 0.9rem;
+             transform: scale(0.96); transition: transform 0.35s cubic-bezier(.2,.7,.3,1); }
+.lb.is-open figure { transform: scale(1); }
+.lb img { max-width: 92vw; max-height: 80vh; width: auto; height: auto; object-fit: contain; border: 1px solid #333; background: #111; transition: opacity 0.25s ease; }
+.lb img.is-loading { opacity: 0; }
+.lb figcaption { font-family: 'Space Mono', monospace; font-size: 0.8rem; letter-spacing: 0.05em; color: #EDE6D6; text-align: center; max-width: 80ch; }
+.lb-count { color: #999; margin-left: 0.8rem; }
+.lb button { position: absolute; background: #EDE6D6; color: #000; border: 1px solid #000; font: 700 1.1rem/1 'Space Mono', monospace;
+             width: 46px; height: 46px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s, color 0.2s; }
+.lb button:hover { background: #000; color: #EDE6D6; border-color: #EDE6D6; }
+.lb button:focus-visible { outline: 2px solid #EDE6D6; outline-offset: 3px; }
+.lb-close { top: 18px; right: 18px; }
+.lb-prev { left: 18px; top: 50%; transform: translateY(-50%); }
+.lb-next { right: 18px; top: 50%; transform: translateY(-50%); }
+@media (max-width: 640px) { .lb-prev, .lb-next { top: auto; bottom: 18px; transform: none; } .lb img { max-height: 70vh; } }
+@media (prefers-reduced-motion: reduce) { .lb, .lb figure, .lb img { transition: none; } }
+
 /* Section: Modules */
 .section-modules {
     padding: 15vh 3vw;
@@ -2238,6 +2260,74 @@ a, button, .module-card {
     copyBtn.addEventListener('click', async () => {
         try { await navigator.clipboard.writeText('https://horschamp.ai.studio'); copyBtn.textContent = T.copied; }
         catch (_) { copyBtn.textContent = 'horschamp.ai.studio'; }
+    });
+})();
+</script>
+<div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="Capture agrandie" hidden>
+    <figure><img alt=""><figcaption><span class="lb-cap"></span><span class="lb-count"></span></figcaption></figure>
+    <button type="button" class="lb-close" aria-label="Fermer">×</button>
+    <button type="button" class="lb-prev" aria-label="Image précédente">←</button>
+    <button type="button" class="lb-next" aria-label="Image suivante">→</button>
+</div>
+<script>
+/* Lightbox des captures : fondu doux, flèches, Échap, glisser sur mobile */
+(function () {
+    var lb = document.getElementById('lightbox');
+    var links = Array.prototype.slice.call(document.querySelectorAll('.shot a'));
+    if (!lb || !links.length) return;
+    var img = lb.querySelector('img'), cap = lb.querySelector('.lb-cap'), count = lb.querySelector('.lb-count');
+    var idx = 0, lastFocus = null, closeTimer = null;
+    function show(i) {
+        idx = (i + links.length) % links.length;
+        var a = links[idx], fig = a.closest('figure'), fc = fig && fig.querySelector('figcaption');
+        img.classList.add('is-loading');
+        img.onload = function () { img.classList.remove('is-loading'); };
+        img.src = a.getAttribute('href');
+        img.alt = a.querySelector('img') ? a.querySelector('img').alt : '';
+        cap.textContent = fc ? fc.textContent : '';
+        count.textContent = (idx + 1) + ' / ' + links.length;
+    }
+    function open(i) {
+        clearTimeout(closeTimer);
+        lastFocus = document.activeElement;
+        show(i);
+        lb.hidden = false;
+        document.documentElement.style.overflow = 'hidden';
+        requestAnimationFrame(function () { lb.classList.add('is-open'); lb.querySelector('.lb-close').focus(); });
+    }
+    function close() {
+        lb.classList.remove('is-open');
+        document.documentElement.style.overflow = '';
+        closeTimer = setTimeout(function () { lb.hidden = true; img.removeAttribute('src'); }, 350);
+        if (lastFocus) lastFocus.focus();
+    }
+    links.forEach(function (a, i) {
+        a.addEventListener('click', function (e) {
+            if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return; /* garder « ouvrir dans un onglet » */
+            e.preventDefault(); open(i);
+        });
+    });
+    lb.querySelector('.lb-close').addEventListener('click', close);
+    lb.querySelector('.lb-prev').addEventListener('click', function () { show(idx - 1); });
+    lb.querySelector('.lb-next').addEventListener('click', function () { show(idx + 1); });
+    lb.addEventListener('click', function (e) { if (e.target === lb) close(); });
+    document.addEventListener('keydown', function (e) {
+        if (lb.hidden) return;
+        if (e.key === 'Escape') close();
+        else if (e.key === 'ArrowLeft') show(idx - 1);
+        else if (e.key === 'ArrowRight') show(idx + 1);
+        else if (e.key === 'Tab') { /* garder le focus dans la fenêtre */
+            var f = lb.querySelectorAll('button'), first = f[0], last = f[f.length - 1];
+            if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+            else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+    });
+    var x0 = null;
+    lb.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', function (e) {
+        if (x0 === null) return;
+        var dx = e.changedTouches[0].clientX - x0; x0 = null;
+        if (Math.abs(dx) > 50) show(idx + (dx < 0 ? 1 : -1));
     });
 })();
 </script>
